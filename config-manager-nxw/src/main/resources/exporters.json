@@ -1,0 +1,19 @@
+{
+  "node_exporter": [
+      {"key":"port",
+        "value": 9100},
+      {"key": "install_template",
+        "value": "node_exporter.template"},
+      {"key": "uninstall_template",
+        "value": "node_exporter_uninstall.template"}
+      ],
+  "app_exporter": [
+    {"key":"port",
+      "value": 9107},
+    {"key": "install_template",
+      "value": "ha_exporter.template"},
+    {"key": "uninstall_template",
+      "value": "ha_exporter_uninstall.template"}
+  ]
+
+}

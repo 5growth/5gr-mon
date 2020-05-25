@@ -1,0 +1,3 @@
+AGENT_WORK_DIR={{ workdir }}
+AGENT_NAME="{{ name }}"
+AGENT_CONFIG={{ agent_config }}

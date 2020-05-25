@@ -1,0 +1,14 @@
+{
+  "name": "test_dash",
+  "panels": [
+    {
+      "title": "Http request rate",
+      "query": "sum(rate(http_requests_total[1m]))"
+    }
+  ],
+  "users": [
+    "pippo"
+  ],
+  "plottedTime": 600,
+  "refreshTime": "5s"
+}

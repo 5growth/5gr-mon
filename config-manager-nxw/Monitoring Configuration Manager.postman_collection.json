@@ -1,0 +1,890 @@
+{
+	"info": {
+		"_postman_id": "f4ec94fb-e835-4f4f-9d1d-dc205f16d00b",
+		"name": "Monitoring Configuration Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "exporter",f
+			"item": [
+				{
+					"name": "exporter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8989/prom-manager/exporter",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"exporter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "exporter/id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/exporter/719da035-956e-497f-911a-1c6a248017f8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"exporter",
+								"719da035-956e-497f-911a-1c6a248017f8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "exporter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2\",\n\"endpoint\": \n\t[{\"address\": \"192.168.100.1\", \"port\": \"9091\"}],\n\"vnfdId\": \"spr2\", \"nsId\": \"fgt-9f62028-cbe4-4d07-b89d-e39d07943175\",\n\"collectionPeriod\": 15,\n\"metrics_path\": \"/metrics/NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2\"}"
+						},
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/exporter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"exporter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "exporter",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"exporterId\": \"719da035-956e-497f-911a-1c6a248017f8\",\n    \"name\": \"strin1g\",\n    \"endpoint\": [\n        {\n            \"address\": \"string\",\n            \"port\": 0\n        }\n    ],\n    \"collectionPeriod\": 0\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/exporter/719da035-956e-497f-911a-1c6a248017f8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"exporter",
+								"719da035-956e-497f-911a-1c6a248017f8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "exporter",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"exporterId\": \"719da035-956e-497f-911a-1c6a248017f8\",\n    \"name\": \"strin1g\",\n    \"endpoint\": [\n        {\n            \"address\": \"string\",\n            \"port\": 0\n        }\n    ],\n    \"collectionPeriod\": 0\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/exporter/4233231d-72fc-4060-9d9d-16d8c6a35192",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"exporter",
+								"4233231d-72fc-4060-9d9d-16d8c6a35192"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "alert",
+			"item": [
+				{
+					"name": "alert",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/alert",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"alert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alert/id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/alert/de71888c-03ac-4682-b4fe-5dd89be93c8e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"alert",
+								"de71888c-03ac-4682-b4fe-5dd89be93c8e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"alertName\": \"alert1\",\n  \"labels\": [\n  ],\n  \"severity\": \"warning\",\n  \"for\": \"10s\",\n  \"query\": \"(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0\",\n  \"value\": 0,\n  \"kind\": \"G\",\n  \"target\": \"http://localhost:8080\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/alert",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"alert"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alert",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"exporterId\": \"719da035-956e-497f-911a-1c6a248017f8\",\n    \"name\": \"strin1g\",\n    \"endpoint\": [\n        {\n            \"address\": \"string\",\n            \"port\": 0\n        }\n    ],\n    \"collectionPeriod\": 0\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/prom-manager/alert/719da035-956e-497f-911a-1c6a248017f8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"prom-manager",
+								"alert",
+								"719da035-956e-497f-911a-1c6a248017f8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alert",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/alert/19d2bb0e-9722-40c6-ad35-39960e798a64",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"alert",
+								"19d2bb0e-9722-40c6-ad35-39960e798a64"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "dashboard",
+			"item": [
+				{
+					"name": "dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/dashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dashboard/id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/dashboard/9arT7t_mz",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"dashboard",
+								"9arT7t_mz"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dashboard",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"test_dash\",\n  \"panels\": [\n    {\n      \"title\": \"Http request rate\",\n      \"query\": \"sum(rate(http_requests_total[1m]))\",\n      \"size\": null\n    }\n  ],\n  \"users\": [\n    \"pippo\"\n  ],\n  \"plottedTime\": 600,\n  \"refreshTime\": \"5s\"\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/dashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dashboard",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dashboardId\": \"9arT7t_mz\",\n  \"name\": \"test_dash1\",\n  \"panels\": [\n    {\n      \"title\": \"Http request rate\",\n      \"query\": \"sum(rate(http_requests_total[1m]))\",\n      \"size\": null\n    }\n  ],\n  \"users\": [\n    \"pippo\"\n  ],\n  \"plottedTime\": 600,\n  \"refreshTime\": \"5s\"\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/dashboard/9arT7t_mz",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"dashboard",
+								"9arT7t_mz"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PrometheusScraper",
+			"item": [
+				{
+					"name": "addPromtheusScraper",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"performanceMetric\": \"VcpuUsageMean\",\n\t\"nsid\": \"fgt-9f62028-cbe4-4d07-b89d-e39d07943175\",\n\t\"vnfid\": \"spr2\",\n\t\"interval\": 1,\n\t\"kafkaTopic\": \"fgt-9f62028-cbe4-4d07-b89d-e39d07943175_scaling\",\n\t\"expression\": \"avg((1 - avg by(instance) (irate(node_cpu_seconds_total{mode=\\\"idle\\\",nsId=\\\"fgt-9f62028-cbe4-4d07-b89d-e39d07943175\\\",vnfdId=\\\"spr2\\\"}[1m]))) * 100)\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/prometheus_scraper",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"prometheus_scraper"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delPromtheusScraper",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8989/prom-manager/prometheus_scraper/b3b23bb0-d14a-4f5d-9d5d-759f387f2e2a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"prometheus_scraper",
+								"b3b23bb0-d14a-4f5d-9d5d-759f387f2e2a"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "agent",
+			"item": [
+				{
+					"name": "command",
+					"item": [
+						{
+							"name": "do _command",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n        \"agent_id\": \"vm_agent_1\",\n        \"args\": [\"arg1_value\", \"arg2_value\"],\n        \"env\": {\"MY_ENV_VARIABLE\": \"MY_ENV_VARIABLE_VALUE\"},\n        \"type_message\": \"bash_script\",\n        \"cwd\": \"/\",\n        \"body\": [\"#! /bin/bash -e\",\n                 \"ls -la\",\n                 \"date\",\n                 \"echo $1\",\n                 \"exit 0\"]\n    }",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8989/prom-manager/agent_command",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8989",
+									"path": [
+										"prom-manager",
+										"agent_command"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "do _command prometheus",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n        \"agent_id\": \"vm_agent_1\",\n        \"args\": [\"arg1_value\", \"arg2_value\"],\n        \"env\": {\"MY_ENV_VARIABLE\": \"MY_ENV_VARIABLE_VALUE\"},\n        \"type_message\": \"bash_script\",\n        \"cwd\": \"/tmp\",\n        \"body\": [\n        \t\t\"#!/bin/bash\",\n\"sudo useradd node_exporter -s /sbin/nologin\",\n\"wget https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz\",\n\"tar xvfz node_exporter-0.18.1.linux-amd64.tar.gz\",\n\"sudo cp  node_exporter-0.18.1.linux-amd64/node_exporter /usr/sbin/\",\n\"\",\n\"sudo bash -c \\\"cat << EOF > /etc/systemd/system/node_exporter.service\",\n\"[Unit]\",\n\"Description=Node Exporter\",\n\"[Service]\",\n\"User=node_exporter\",\n\"EnvironmentFile=/etc/sysconfig/node_exporter\",\n\"ExecStart=/usr/sbin/node_exporter $OPTIONS\",\n\"[Install]\",\n\"WantedBy=multi-user.target\",\n\"EOF\\\"\",\n\"\",\n\"sudo mkdir -p /etc/sysconfig\",\n\"\",\n\"sudo bash -c \\\"cat << EOF > /etc/sysconfig/node_exporter\",\n\"OPTIONS=\\\"--collector.textfile.directory /var/lib/node_exporter/textfile_collector\\\"\",\n\"EOF\\\"\",\n\"\",\n\"\",\n\"\",\n\"sudo systemctl daemon-reload\",\n\"\",\n\"sudo systemctl enable node_exporter\",\n\"\",\n\"sudo systemctl start node_exporter\",\n        \n                 \"exit 0\"]\n    }",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8989/prom-manager/agent_command",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8989",
+									"path": [
+										"prom-manager",
+										"agent_command"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get_command_status",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8989/prom-manager/agent_command/vm_agent_2/1",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8989",
+									"path": [
+										"prom-manager",
+										"agent_command",
+										"vm_agent_2",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "prometheus_collector",
+					"item": [
+						{
+							"name": "add_prometheus_collector",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n        \"agent_id\": \"vm_agent_1\",\n        \"host\": \"127.0.0.1\",\n        \"prometheus_topic\": \"prometheus\",\n        \"port\": \"9100\",\n        \"node_url_suffix\": \"/metrics\",\n        \"prometheus_job\": \"vm_agent_11\",\n        \"interval\": \"1\",\n        \"labels\":[\n        \t{\"key\":\"instance\",\n        \t\"value\": \"vm_agent_1:9100\"}\n        \t]\n    }",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8989/prom-manager/add_prometheus_collector",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8989",
+									"path": [
+										"prom-manager",
+										"add_prometheus_collector"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "del_prometheus_collector",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8989/prom-manager/del_prometheus_collector/vm_agent_1/127.0.0.1:9100",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8989",
+									"path": [
+										"prom-manager",
+										"del_prometheus_collector",
+										"vm_agent_1",
+										"127.0.0.1:9100"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "exporter",
+					"item": [
+						{
+							"name": "install_exporter",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n        \"agent_id\": \"vm_agent_1\",\n        \"args\": [\"arg1_value\", \"arg2_value\"],\n        \"env\": {\"MY_ENV_VARIABLE\": \"MY_ENV_VARIABLE_VALUE\"},\n        \"type_message\": \"bash_script\",\n        \"cwd\": \"/tmp\",\n        \"exporter\": \"node_exporter\",\n        \"host\": \"127.0.0.1\",\n        \"prometheus_topic\": \"prometheus\",\n        \"node_url_suffix\": \"/metrics\",\n        \"prometheus_job\": \"vm_agent_1\",\n        \"interval\": \"1\",\n        \"labels\":[\n        \t{\"key\":\"nsId\",\n        \t\"value\": \"fgt-b7c85d6-2e44-462b-a87b-41156f45140a\"},\n        \t{\"key\":\"vnfdId\",\n        \t\"value\": \"webserver\"}\n\n        \t]\n    }",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8989/prom-manager/install_exporter",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8989",
+									"path": [
+										"prom-manager",
+										"install_exporter"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "install_exporter2",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n        \"agent_id\": \"vm_agent_1\",\n        \"exporter\": \"node_exporter\",\n        \"prometheus_job\": \"vm_agent_1\",\n        \"labels\":[\n        \t{\"key\":\"nsId\",\n        \t\"value\": \"fgt-b7c85d6-2e44-462b-a87b-41156f45140a\"},\n        \t{\"key\":\"vnfdId\",\n        \t\"value\": \"webserver\"}\n        \t]\n    }",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8989/prom-manager/install_exporter",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8989",
+									"path": [
+										"prom-manager",
+										"install_exporter"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "uninstall_exporter",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8989/prom-manager/uninstall_exporter/vm_agent_1/node_exporter",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8989",
+									"path": [
+										"prom-manager",
+										"uninstall_exporter",
+										"vm_agent_1",
+										"node_exporter"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "create_agent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"agent_id\": null,\n\"install_method\": \"cloud_init\",\n\"description\": \"VNF_1\",\n\"daemon_user\": \"ubuntu\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8989/prom-manager/agent",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"agent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get_agent",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8989//prom-manager/agent",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8989",
+							"path": [
+								"",
+								"prom-manager",
+								"agent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete_agent",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8989/prom-manager/agent/vm_agent_1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8989",
+							"path": [
+								"prom-manager",
+								"agent",
+								"vm_agent_1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

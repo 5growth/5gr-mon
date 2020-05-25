@@ -1,0 +1,21 @@
+logging.level: info
+filebeat.inputs:
+- type: netflow
+  max_message_size: 10KiB
+  host: "0.0.0.0:4739"
+  protocols: [ ipfix ]
+  expiration_timeout: 24h
+  queue_size: 8192
+  detect_sequence_reset: true
+
+output.kafka:
+  hosts: [ "kafka:9092" ]
+  topic: 'ipfix'
+
+  partition.round_robin:
+    reachable_only: false
+
+  required_acks: 1
+  compression: gzip
+  max_message_bytes: 1000000
+

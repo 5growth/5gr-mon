@@ -1,0 +1,9 @@
+{
+    "name": "vm_agent_1",
+    "workdir": "/home/ubuntu/vm_agent_1/work",
+    "user": "ubuntu",
+    "logfile": "LOGFILE",
+    "backward_topic": "vm_agent_1_backward",
+    "forward_topic": "vm_agent_1_forward",
+    "bootstrap_servers": "192.168.100.1"
+}

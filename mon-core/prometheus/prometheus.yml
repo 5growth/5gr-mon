@@ -1,0 +1,15 @@
+---
+scrape_configs: []
+global:
+  evaluation_interval: "10s"
+  scrape_interval: "15s"
+  external_labels: null
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - "mon_alertmanager:9093"
+      labels: {}
+rule_files:
+  - "alert.rules"
+  - "calculate.rules"

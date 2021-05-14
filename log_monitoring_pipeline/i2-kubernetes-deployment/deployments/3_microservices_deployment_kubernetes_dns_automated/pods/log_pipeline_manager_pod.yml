@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logpipelinemanager
+spec:
+  selector:
+    matchLabels:
+      run: logpipelinemanager
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: logpipelinemanager
+    spec:
+      containers:
+        - name: log-pipeline-manager-container
+          image: log_pipeline_manager:vDNS
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8987
+              hostPort: 8987
+          command:
+            - "/entrypoint.sh"
+          args:
+            - "kibana-dashboard"
+            - "elastalert"
+    #  nodeSelector:
+    #      kubernetes.io/hostname: 5geve-k3s-master-monit
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logpipelinemanager
+  labels:
+    run: logpipelinemanager
+spec:
+  ports:
+    - port: 8987
+      protocol: TCP
+  selector:
+    run: logpipelinemanager

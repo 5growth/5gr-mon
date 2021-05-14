@@ -34,10 +34,11 @@ Call: H2020-ICT-2019. Topic: ICT-19-2019. Type of action: RIA. Duration: 30 Mont
     9. [Optical radio WIM exporter](#radio-wim-ex)
 4. [App instrumentation example](#app-ex)
 5. [Remote virtual machine agent](#rvm-agent)
-6. [ELK stack](#elk-stack)
-    1. [Kibana Dashboard API Json Generator](#dep-kibana-dashboards-telca)
-    2. [IPFIX to Kafka parser and exporter](#exp-ipfix-telca)
-    3. [Packetbeat container](#exp-packetbeat-telca)
+6. [Log Monitoring System](#log-monitoring)
+    1. [Log Monitoring Pipeline](#log-monitoring-pipeline)
+    2. [(Old) Kibana Dashboard API Json Generator](#dep-kibana-dashboards-telca)
+    3. [IPFIX to Kafka parser and exporter](#exp-ipfix-telca)
+    4. [Packetbeat container](#exp-packetbeat-telca)
 
 ## 1. Monitoring Core <a name="monitoring-core"></a>
 
@@ -139,25 +140,30 @@ RVM agent features:
 
 Folder: `rvm_agent`
 
-## 6. ELK stack <a name="elk-stack"></a>
-Telcaria TBC
-### 6.1. Kibana Dashboard API Json Generator <a name="dep-kibana-dashboards-telca"></a>
-Telcaria TBC
+## 6. Log Monitoring System <a name="log-monitoring"></a>
+
+This contains the Log Monitoring system and other useful tools related to this block.
+
+### 6.1. Log Monitoring Pipeline <a name="log-monitoring-pipeline"></a>
+
+This contains the projects related to the Log Monitoring Pipeline, having the final version of the Kibana Dashboards application, composed by two separated modules: Kibana Dashboards Manager and Kibana Dashboards Generator, and also a repository containing all the Docker Images and Kubernetes deployments used to deploy the Log Monitoring Pipeline.
+
+Folder: `log_monitoring_pipeline`
+
+### 6.2. (Old) Kibana Dashboard API Json Generator <a name="dep-kibana-dashboards-telca"></a>
+
+Old version of the Kibana Dashboards Generator, maintained for the sake of completeness.
 
 Folder: `dep-kibana-dashboards-telca`
 
-### 6.2. IPFIX to Kafka parser and exporter <a name="exp-ipfix-telca"></a>
-Telcaria TBC
+### 6.3. IPFIX to Kafka parser and exporter <a name="exp-ipfix-telca"></a>
 
 An exporter used to collect, parser and transform [IPFIX](https://www.iana.org/assignments/ipfix/ipfix.xhtml) data to JSON format.
 
 Folder: `exp-ipfix-telca`
 
-### 6.3. Packetbeat container <a name="exp-packetbeat-telca"></a>
-Telcaria TBC
+### 6.4. Packetbeat container <a name="exp-packetbeat-telca"></a>
 
 Packetbeat container works by capturing the network traffic
 
 Folder: `exp-packetbeat-telca`
-
-

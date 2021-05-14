@@ -1,0 +1,27 @@
+{
+  "objects": [
+    {
+      "id": "visualization_{{ id }}",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "{{ title }}",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"index\":\"index_{{ index }}\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "visState": "{\"title\":\"{{ title }}\",\"type\":\"line\", \"params\":{\"type\":\"line\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"filter\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"{{ ylabel }}\"}}],\"seriesParams\":[{\"show\":\"true\",\"type\":\"line\",\"mode\":\"normal\",\"data\":{\"label\":\"{{ ylabel }}\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"times\":[],\"addTimeMarker\":false,\"dimensions\":{\"x\":{\"accessor\":0,\"format\":{\"id\":\"number\"},\"params\":{\"interval\":4000},\"aggType\":\"histogram\"},\"y\":[{\"accessor\":1,\"format\":{\"id\":\"number\"},\"params\":{},\"aggType\":\"{{ aggregationType }}\"}]}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"{{ aggregationType }}\",\"schema\":\"metric\",\"params\":{\"field\":\"{{ metricNameY }}\", \"customLabel\": \"{{ ylabel }}\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\": \"{{ metricNameX }}\",\"useNormalizedEsInterval\": true,\"interval\": \"ms\",\"drop_partials\": false, \"customInterval\": \"2h\",\"min_doc_count\": 1,\"extended_bounds\": {}, \"customLabel\": \"{{ xlabel }}\"}}]}"
+      }
+    },
+    {
+      "id": "index_{{ index }}",
+      "type": "index-pattern",
+      "version": 1,
+      "attributes": {
+        "title": "{{ index }}"
+      }
+    }
+  ]
+}

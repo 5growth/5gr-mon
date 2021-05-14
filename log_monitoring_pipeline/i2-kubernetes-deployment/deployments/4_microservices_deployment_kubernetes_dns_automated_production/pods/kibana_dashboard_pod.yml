@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana-dashboard
+spec:
+  selector:
+    matchLabels:
+      run: kibana-dashboard
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: kibana-dashboard
+    spec:
+      containers:
+        - name: kibana-dashboard-container
+          image: kibana_dashboard:vDNS2
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+          command:
+            - "/entrypoint.sh"
+          args:
+            - "kibana"
+            - "elasticsearch"
+            - "10.9.8.188"
+          env:
+            - name: pod_namespace
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+    #      resources:
+    #          requests:
+    #              memory: "2Gi"
+    #              cpu: "1"
+    #          limits:
+    #              memory: "2Gi"
+    #              cpu: "1"
+    #  nodeSelector:
+    #      kubernetes.io/hostname: 5geve-k3s-master-monit
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana-dashboard
+  labels:
+    run: kibana-dashboard
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+  selector:
+    run: kibana-dashboard

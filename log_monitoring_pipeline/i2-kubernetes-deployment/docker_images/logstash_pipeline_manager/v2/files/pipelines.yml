@@ -1,0 +1,2 @@
+- pipeline.id: test
+  path.config: "/etc/logstash/conf.d/test.conf"

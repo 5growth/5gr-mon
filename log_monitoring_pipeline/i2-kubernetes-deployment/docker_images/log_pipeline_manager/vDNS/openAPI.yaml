@@ -1,0 +1,280 @@
+definitions:
+  alert_description_data:
+    properties:
+      alertName:
+        description: any alert name
+        type: string
+      for:
+        description: 'timeframe to be set, in the form value and unit time'
+        type: string
+      index:
+        description: ns_id which is being monitorized for the alert to trigger
+        type: string
+      kind:
+        description: set to 'frequency'
+        type: string
+      labels:
+        description: 'additional values that may be needed or set to ''[]'''
+        type: array
+      query:
+        description: values to filter in the message
+        type: string
+      severity:
+        description: not being considered
+        type: string
+      target:
+        description: 'set to <ip_containing_the_alert_reveiver>:8000/alert_receiver'
+        type: string
+  kibana_description_data:
+    properties:
+      dashboardTitle:
+        description: any dashboard Title
+        type: string
+      dashboard_type:
+        description: dashboard_type set to 'vm_logs'
+        type: string
+      ns_id:
+        description: corresponding ns_id associated to the Dashboard
+        type: string
+  logscraper_description_data:
+    properties:
+      expression:
+        description: regular expression
+        type: string
+      interval:
+        description: timeframe expressed in seconds
+        type: string
+      kafkaTopic:
+        description: associated to the later publisher kafka topic
+        type: string
+      nsid:
+        description: corresponding ns_id associated
+        type: string
+      performanceMetric:
+        description: set to 'logs'
+        type: string
+      vnfid:
+        description: set to 'webserver'
+        type: array
+info:
+  title: Log Pipeline Manager REST API
+  version: '1.0'
+paths:
+  /alert:
+    post:
+      description: ''
+      parameters:
+        - in: body
+          name: alert_description_data
+          schema:
+            $ref: '#/definitions/alert_description_data'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  alertName:
+                    description: the alert name created
+                    type: string
+                  for:
+                    description: 'timeframe to be set, in the form value and unit time'
+                    type: string
+                  index:
+                    description: ns_id which is being monitorized for the alert to trigger
+                    type: string
+                  kind:
+                    description: set to 'frequency'
+                    type: string
+                  labels:
+                    description: additional possible parameters
+                    type: array
+                  query:
+                    description: values to filter in the message
+                    type: string
+                  severity:
+                    description: not being considered
+                    type: string
+                  target:
+                    description: 'set to <ip_containing_the_alert_reveiver>:8000/alert_receiver'
+                    type: string
+                type: object
+          description: accepted request
+        '400':
+          description: error processing the request
+      summary: Create Alert associated to a ns_id monitorization.
+  '/alert/{alert_id}':
+    delete:
+      description: ''
+      parameters:
+        - description: alert_id created to monitor a ns_id
+          in: path
+          name: alert_id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  deleted:
+                    description: the alert_id being removed
+                    type: string
+                type: object
+          description: accepted request
+        '400':
+          description: error processing the request
+      summary: Delete a concrete alert monitoring a ns_id.
+  '/job/{ns_id}':
+    delete:
+      description: ''
+      parameters:
+        - description: ns_id and consequently the topic name
+          in: path
+          name: ns_id
+          type: string
+      responses:
+        '200':
+          description: accepted request
+        '400':
+          description: error processing the request
+      summary: Delete the topic associated to an ns_id.
+    post:
+      description: ''
+      parameters:
+        - description: ns_id and consequently the topic name
+          in: path
+          name: ns_id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  created:
+                    description: the ns_id (and topic name) being created
+                    type: string
+                type: object
+          description: accepted request
+        '400':
+          description: error processing the request
+      summary: Create topic associated to a ns_id.
+  /kibanaDashboard:
+    post:
+      description: ''
+      parameters:
+        - in: body
+          name: kibana_description_data
+          schema:
+            $ref: '#/definitions/kibana_description_data'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  dashboardId:
+                    description: dashboardId created
+                    type: string
+                  dashboardTitle:
+                    description: dashboard title
+                    type: array
+                  dashboard_type:
+                    description: set to 'vm_logs'
+                    type: string
+                  ns_id:
+                    description: corresponding ns_id associated to the Dashboard
+                    type: string
+                  url:
+                    description: url associated to the dashboard created
+                    type: string
+                type: object
+          description: accepted request
+        '400':
+          description: error processing the request
+      summary: Create Kibana Dashboard associated to a ns_id.
+  '/kibanaDashboard/{dashboardId}':
+    delete:
+      description: ''
+      parameters:
+        - description: dashboardId to be deleted
+          in: path
+          name: dashboardId
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  deleted:
+                    description: the dashboardId being removed
+                    type: string
+                type: object
+          description: accepted request
+        '400':
+          description: error processing the request
+      summary: Delete Kibana Dashboard associated to a ns_id.
+  /logScraper:
+    post:
+      description: ''
+      parameters:
+        - in: body
+          name: logscraper_description_data
+          schema:
+            $ref: '#/definitions/logscraper_description_data'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  expression:
+                    description: regular expression applied on ElasticSearch
+                    type: string
+                  interval:
+                    description: seconds that were scheduled
+                    type: integer
+                  kafkaTopic:
+                    description: the topic where the logs were being produced
+                    type: string
+                  nsid:
+                    description: the ns_id (and topic) being scrapped
+                    type: string
+                  performanceMetric:
+                    description: set to 'logs'
+                    type: string
+                  scraper_id:
+                    description: the scraper to be removed
+                    type: string
+                  vnfid:
+                    description: set to 'webserver'
+                    type: string
+                type: object
+          description: accepted request
+        '400':
+          description: error processing the request
+      summary: Create LogScrapper associated to a ns_id monitorization and a later kafka topic.
+  '/logScraper/{scraperId}':
+    delete:
+      description: ''
+      parameters:
+        - description: the scraperId which was created
+          in: path
+          name: scraperId
+          type: string
+      responses:
+        '200':
+          description: accepted request
+        '400':
+          description: error processing the request
+      summary: Delete a LogScraper monitoring a ns_id.
+  /spec:
+    get:
+      description: ''
+      responses:
+        swagger:
+          description: swagger specification
+      summary: Get swagger specification.
+swagger: '2.0'

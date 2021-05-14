@@ -1,0 +1,409 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: "http://10.9.8.151:8080"
+  description: Generated server url
+paths:
+  /storage/kpi:
+    post:
+      tags:
+      - storage-controller
+      operationId: createKpi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KpiWrapper"
+        required: true
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+  /storage/kpi/{kpiId}:
+    get:
+      tags:
+      - storage-controller
+      operationId: getKpi
+      parameters:
+      - name: kpiId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/KpiWrapper"
+    delete:
+      tags:
+      - storage-controller
+      operationId: deleteKpi
+      parameters:
+      - name: kpiId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+  /storage/metric:
+    post:
+      tags:
+      - storage-controller
+      operationId: createMetric
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MetricWrapper"
+        required: true
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+  /storage/metric/{metricId}:
+    get:
+      tags:
+      - storage-controller
+      operationId: getMetric
+      parameters:
+      - name: metricId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MetricWrapper"
+    delete:
+      tags:
+      - storage-controller
+      operationId: deleteMetric
+      parameters:
+      - name: metricId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+  /storage/experiment/{experimentId}:
+    get:
+      tags:
+      - storage-controller
+      operationId: getExperiment
+      parameters:
+      - name: experimentId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ExperimentWrapper"
+    delete:
+      tags:
+      - storage-controller
+      operationId: deleteExperiment
+      parameters:
+      - name: experimentId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+  /storage/experiment:
+    post:
+      tags:
+      - storage-controller
+      operationId: createExperiment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExperimentWrapper"
+        required: true
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+  /dashboard/{nsdId}:
+    get:
+      tags:
+      - dashboards-manager-controller
+      operationId: getDashboard
+      parameters:
+      - name: nsdId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UrlWrapper"
+  /dashboard:
+    post:
+      tags:
+      - dashboards-manager-controller
+      operationId: createDashboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DashboardsManagerRequestWrapper"
+        required: true
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+    delete:
+      tags:
+      - dashboards-manager-controller
+      operationId: deleteDashboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                empty:
+                  type: boolean
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                type: string
+  /dashboard/data/{nsdId}:
+    get:
+      tags:
+      - dashboards-manager-controller
+      operationId: getDataFromTopic
+      parameters:
+      - name: nsdId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: elasticsearchParametersWrapper
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/ElasticsearchParametersWrapper"
+      responses:
+        "200":
+          description: default response
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ElasticsearchDashboardsManagerResponseWrapper"
+components:
+  schemas:
+    KpiWrapper:
+      type: object
+      properties:
+        topic:
+          type: string
+        kpiId:
+          type: string
+        name:
+          type: string
+        unit:
+          type: string
+        interval:
+          type: number
+          format: double
+        graph:
+          type: string
+          enum:
+          - line
+          - pie
+          - metric
+          - gauge
+          - bar
+        dashboardUrl:
+          type: string
+        dashboardId:
+          type: string
+        user:
+          type: string
+        expId:
+          type: string
+    MetricWrapper:
+      type: object
+      properties:
+        topic:
+          type: string
+        metricId:
+          type: string
+        type:
+          type: string
+          enum:
+          - APPLICATION_METRIC
+          - INFRASTRUCTURE_METRIC
+        name:
+          type: string
+        metricCollectionType:
+          type: string
+        unit:
+          type: string
+        interval:
+          type: number
+          format: double
+        graph:
+          type: string
+          enum:
+          - line
+          - pie
+          - metric
+          - gauge
+          - bar
+        dashboardUrl:
+          type: string
+        dashboardId:
+          type: string
+        user:
+          type: string
+        expId:
+          type: string
+    ExperimentWrapper:
+      type: object
+      properties:
+        expId:
+          type: string
+        logWrappers:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: "#/components/schemas/LogWrapper"
+    LogWrapper:
+      type: object
+      properties:
+        topic:
+          type: string
+        graph:
+          type: string
+          enum:
+          - line
+          - pie
+          - metric
+          - gauge
+          - bar
+        dashboardUrl:
+          type: string
+        expId:
+          type: string
+        dashboardId:
+          type: string
+        dashboardTitle:
+          type: string
+        dashboardType:
+          type: string
+    UrlWrapper:
+      type: object
+      properties:
+        url:
+          type: string
+    ElasticsearchParametersWrapper:
+      type: object
+      properties:
+        from:
+          maximum: 9999
+          minimum: 0
+          type: integer
+          format: int32
+        size:
+          maximum: 10000
+          minimum: 1
+          type: integer
+          format: int32
+    ElasticsearchDashboardsManagerResponseWrapper:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ElasticsearchDataWrapper"
+    ElasticsearchDataWrapper:
+      type: object
+      properties:
+        device_id:
+          type: string
+        timestamp:
+          type: string
+        unit:
+          type: string
+        device_timestamp:
+          type: string
+        context:
+          type: string
+        value:
+          type: number
+          format: float
+    DashboardsManagerRequestWrapper:
+      type: object
+      properties:
+        value:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValueWrapper"
+    ValueWrapper:
+      type: object
+      properties:
+        topic:
+          type: string
+        dashboardTitle:
+          type: string
+        dashboard_type:
+          type: string
+        ns_id:
+          type: string

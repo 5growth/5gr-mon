@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deletekafkatopic
+spec:
+  selector:
+    matchLabels:
+      run: deletekafkatopic
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: deletekafkatopic
+    spec:
+      containers:
+        - name: delete-kafka-topic-container
+          image: delete_kafka_topic
+          imagePullPolicy: Never
+          command: [ "/bin/bash", "-c", "--" ]
+          args: [ "while true; do sleep 3600; done;" ]
+          ports:
+            - containerPort: 8290
+              hostPort: 8290
+#  nodeSelector:
+#      kubernetes.io/hostname: 5geve-k3s-master-monit
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deletekafkatopic
+  labels:
+    run: deletekafkatopic
+spec:
+  ports:
+    - port: 8290
+      protocol: TCP
+  selector:
+    run: deletekafkatopic
+

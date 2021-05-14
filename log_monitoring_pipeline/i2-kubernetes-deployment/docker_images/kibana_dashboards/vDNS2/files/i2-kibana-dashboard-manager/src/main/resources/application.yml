@@ -1,0 +1,31 @@
+logging:
+  level:
+    org.springframework.web: DEBUG
+
+spring:
+  application:
+    name: Kibana Dashboards manager
+  datasource:
+    ## default connection pool
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+    ## PostgreSQL
+    url: jdbc:postgresql://127.0.0.1:5432/dashboards #jdbc:postgresql://10.9.8.202:5432/dashboards
+    #driver-class-name: org.postgresql.Driver
+    username: eve
+    password: changeme
+  jpa:
+    #this one is for production envs:
+    generate-ddl: true
+#    hibernate:
+#      ddl-auto: create
+
+#enable kibana interaction
+kibana:
+  enabled: true
+  dashboard-owner-enabled: false
+  baseUrl: http://10.9.8.232:5601
+  dashboardUrl: http://10.9.8.232:5601
+
+elasticsearch.ip_port: http://10.9.8.232:9200/

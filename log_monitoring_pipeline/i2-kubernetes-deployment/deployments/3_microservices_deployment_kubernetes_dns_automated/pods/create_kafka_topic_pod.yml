@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: createkafkatopic
+spec:
+  selector:
+    matchLabels:
+      run: createkafkatopic
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: createkafkatopic
+    spec:
+      containers:
+        - name: create-kafka-topic-container
+          image: create_kafka_topic
+          imagePullPolicy: Never
+          command: [ "/bin/bash", "-c", "--" ]
+          args: [ "while true; do sleep 3600; done;" ]
+          ports:
+            - containerPort: 8190
+              hostPort: 8190
+          command:
+            - "/entrypoint.sh"
+          args:
+            - "kafka:9092"
+    #  nodeSelector:
+#      kubernetes.io/hostname: 5geve-k3s-master-monit
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: createkafkatopic
+  labels:
+    run: createkafkatopic
+spec:
+  ports:
+    - port: 8190
+      protocol: TCP
+  selector:
+    run: createkafkatopic

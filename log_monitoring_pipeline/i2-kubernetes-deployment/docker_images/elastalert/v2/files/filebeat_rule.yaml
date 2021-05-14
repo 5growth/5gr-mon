@@ -1,0 +1,11 @@
+es_host: 10.9.8.154
+es_port: 9200
+name: FILEBEAT
+type: frequency
+index: uc.4.france_nice.application_metric.service_delay
+num_events: 10
+timeframe:
+    seconds: 15
+alert:
+- command
+command: ["curl", "10.9.8.154:8000"]

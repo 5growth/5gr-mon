@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpserver
+spec:
+  selector:
+    matchLabels:
+      run: httpserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: httpserver
+    spec:
+      containers:
+        - name: http-server-container
+          image: http_server
+          imagePullPolicy: Never
+          command: [ "/bin/bash", "-c", "--" ]
+          args: [ "./entrypoint.sh; while true; do sleep 3600; done;" ]
+          ports:
+            - containerPort: 8000
+              hostPort: 8000
+    #  nodeSelector:
+#      kubernetes.io/hostname: 5geve-k3s-master-monit
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpserver
+  labels:
+    run: httpserver
+spec:
+  ports:
+    - port: 8000
+      protocol: TCP
+  selector:
+    run: httpserver

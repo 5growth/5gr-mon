@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elastalert
+spec:
+  selector:
+    matchLabels:
+      run: elastalert
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: elastalert
+    spec:
+      containers:
+        - name: elastalert-container
+          image: elastalert:v2.6_DNS
+          imagePullPolicy: Never
+          command: [ "/bin/sh", "-c", "--" ]
+          args: [ "npm start", "while true; do sleep 3600; done;" ]
+          ports:
+            - containerPort: 3030
+              hostPort: 3030
+            - containerPort: 3333
+              hostPort: 3333
+#  nodeSelector:
+#      kubernetes.io/hostname: 5geve-k3s-master-monit
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastalert
+  labels:
+    run: elastalert
+spec:
+  ports:
+    - port: 3030
+      protocol: TCP
+  selector:
+    run: elastalert

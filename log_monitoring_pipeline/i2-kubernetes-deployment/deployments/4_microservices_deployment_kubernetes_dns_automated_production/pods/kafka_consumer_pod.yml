@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafkaconsumer
+spec:
+  selector:
+    matchLabels:
+      run: kafkaconsumer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: kafkaconsumer
+    spec:
+      containers:
+        - name: kafka-consumer-container
+          image: kafka_consumer
+          imagePullPolicy: Never
+          command: [ "/bin/bash", "-c", "--" ]
+          args: [ "while true; do sleep 3600; done;" ]
+          ports:
+            - containerPort: 8291
+              hostPort: 8291
+          command:
+            - "/entrypoint.sh"
+          args:
+            - "kibana:5601"
+            - "<kafka_ip_address>:9092"
+    #  nodeSelector:
+    #      kubernetes.io/hostname: 5geve-k3s-master-monit
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafkaconsumer
+  labels:
+    run: kafkaconsumer
+spec:
+  ports:
+    - port: 8291
+      protocol: TCP
+  selector:
+    run: kafkaconsumer
+

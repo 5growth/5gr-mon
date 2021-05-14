@@ -1,0 +1,27 @@
+{
+  "objects": [
+    {
+      "id": "visualization_{{ id }}",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "{{ title }}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"index\":\"index_{{ index }}\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "visState": "{\"title\":\"{{ title }}\",\"type\":\"metric\",\"params\":{\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\",\"metric\":{\"percentageMode\":false,\"useRanges\":false,\"colorSchema\":\"Green to Red\",\"metricColorMode\":\"None\",\"colorsRange\":[{\"from\":0,\"to\":10000}],\"labels\":{\"show\":true},\"invertColors\":false,\"style\":{\"bgFill\":\"#000\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\",\"fontSize\":60}}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{  \"customLabel\": \"{{ ylabel }}\" }}]}"
+      }
+    },
+    {
+      "id": "index_{{ index }}",
+      "type": "index-pattern",
+      "version": 1,
+      "attributes": {
+        "title": "{{ index }}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elastalert-config
+  namespace: default
+  #labels:
+  #  k8s-app: elastalert
+data:
+  config.json: |-
+    {
+     "appName": "elastalert-server",
+     "port": 3030,
+     "wsport": 3333,
+     "elastalertPath": "/opt/elastalert",
+     "verbose": false,
+     "es_debug": false,
+     "debug": false,
+     "rulesPath": {
+       "relative": true,
+       "path": "/rules"
+     },
+     "templatesPath": {
+       "relative": true,
+       "path": "/rule_templates"
+     },
+     "es_host": "localhost",
+     "es_port": 9200,
+     "writeback_index": "elastalert_status"
+    }
+  config.yaml: |-
+    # The elasticsearch hostname for metadata writeback
+    # Note that every rule can have its own elasticsearch host
+    es_host: localhost
+    # The elasticsearch port
+    es_port: 9200
+    # Option basic-auth username and password for elasticsearch
+    #es_username: someusername
+    #es_password: somepassword
+    es_username: elastic
+    es_password: changeme
+    # This is the folder that contains the rule yaml files
+    # Any .yaml file will be loaded as a rule
+    rules_folder: /rules
+
+    # How often ElastAlert will query elasticsearch
+    # The unit can be anything from weeks to seconds
+    run_every:
+      seconds: 5
+
+    # ElastAlert will buffer results from the most recent
+    # period of time, in case some log sources are not in real time
+    buffer_time:
+      minutes: 1
+
+    # Optional URL prefix for elasticsearch
+    #es_url_prefix: elasticsearch
+
+    # Connect with TLS to elasticsearch
+    #use_ssl: True
+
+    # Verify TLS certificates
+    #verify_certs: True
+
+    # GET request with body is the default option for Elasticsearch.
+    # If it fails for some reason, you can pass 'GET', 'POST' or 'source'.
+    # See http://elasticsearch-py.readthedocs.io/en/master/connection.html?highlight=send_get_body_as#transport
+    # for details
+    #es_send_get_body_as: GET
+
+
+    # The index on es_host which is used for metadata storage
+    # This can be a unmapped index, but it is recommended that you run
+    # elastalert-create-index to set a mapping
+    writeback_index: elastalert_status
+
+    # If an alert fails for some reason, ElastAlert will retry
+    # sending the alert until this time period has elapsed
+    alert_time_limit:
+      days: 2
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: elastalert
+spec:
+  containers:
+    - name: elastalert-container
+      image: bitsensor/elastalert:3.0.0-beta.0
+      imagePullPolicy: Never
+      command: [ "/bin/sh", "-c", "--" ]
+      args: [ "cp /confmap/*.yaml /opt/elastalert;cp /confmap/*.json /opt/elastalert-server/config;npm start;while true; do sleep 3600; done;" ]
+      ports:
+        - containerPort: 3030
+          hostPort: 3030
+        - containerPort: 3333
+          hostPort: 3333
+      volumeMounts:
+      - name: confmap
+        mountPath: /confmap
+  volumes:
+    - name: confmap
+      configMap:
+        name: elastalert-config
+  restartPolicy: Never

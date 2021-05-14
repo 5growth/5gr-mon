@@ -1,0 +1,189 @@
+{
+	"info": {
+		"_postman_id": "ec3090f0-2b81-4cdf-9676-c468cb56a268",
+		"name": "5Growth Config Manager Requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Topic",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://10.9.8.188:8987/job/topic_name",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"188"
+					],
+					"port": "8987",
+					"path": [
+						"job",
+						"topic_name"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Topic",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://10.9.8.188:8987/job/topic_name",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"188"
+					],
+					"port": "8987",
+					"path": [
+						"job",
+						"topic_name"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Dashboard",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"dashboardTitle\": \"NS_topic_name\",\n\"ns_id\": \"topic_name\",\n\"dashboard_type\": \"vm_logs\"\n}\n"
+				},
+				"url": {
+					"raw": "http://10.9.8.188:8987/kibanaDashboard",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"188"
+					],
+					"port": "8987",
+					"path": [
+						"kibanaDashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Dashboard",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://10.9.8.188:8987/kibanaDashboard/topic_name",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"188"
+					],
+					"port": "8987",
+					"path": [
+						"kibanaDashboard",
+						"topic_name"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Alert",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"alertName\": \"18-pm-12-abril\",\n\"labels\": [],\n\"query\": \"regexp\",\n\"severity\": \"warning\",\n\"for\": \"20s\",\n\"target\": \"10.9.8.154:8000/alert_receiver\",\n\"kind\": \"match\",\n\"index\": \"topic_name\"\n}\n"
+				},
+				"url": {
+					"raw": "http://10.9.8.188:8987/alert",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"188"
+					],
+					"port": "8987",
+					"path": [
+						"alert"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Alert",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://10.9.8.188:8987/alert/topic_name",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"188"
+					],
+					"port": "8987",
+					"path": [
+						"alert",
+						"topic_name"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

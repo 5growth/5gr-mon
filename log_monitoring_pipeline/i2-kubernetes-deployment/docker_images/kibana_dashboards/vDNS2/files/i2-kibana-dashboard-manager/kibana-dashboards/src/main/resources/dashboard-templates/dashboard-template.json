@@ -1,0 +1,33 @@
+{
+  "objects": [
+    {
+      "id": "{{ id }}",
+      "type": "dashboard",
+      "version": 1,
+      "attributes": {
+        "title": "{{ title }}",
+        "hits": 0,
+        "description": "",
+        "panelsJSON":"{{ panelsJson }}",
+        "optionsJSON": "{\"useMargins\":true,\"hidePanelTitles\":false}",
+        "version": 1,
+        "timeRestore": false,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        }
+      },
+      "references":[
+        {% for id in dashboard_id_list %}{% if loop.last %}{"id":"visualization_{{ id }}","name":"panel_{{ loop.index }}","type":"visualization"}{% else %}{"id":"visualization_{{ id }}","name":"panel_{{ loop.index }}","type":"visualization"},
+        {% endif %}{% endfor %}
+      ]
+    },
+    {
+      "id": "index_{{ index }}",
+      "type": "index-pattern",
+      "version": 1,
+      "attributes": {
+        "title": "{{ index }}"
+      }
+    }
+  ]
+}

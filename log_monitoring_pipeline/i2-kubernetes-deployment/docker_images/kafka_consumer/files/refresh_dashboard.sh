@@ -11,6 +11,7 @@ fields_available="0"
 
 while [ "$fields_available" == "0" ]
 do
+	echo "Trying to refresh ${TOPIC_LOWERCASE} index pattern"
     refresh_payload=$(curl -X GET -u ${USER}:${PASSWORD} "http://${KIBANA_IP_PORT}/api/index_patterns/_fields_for_wildcard?pattern=${TOPIC_LOWERCASE}&meta_fields=\[%22_source%22,%22_index%22,%22_id%22,%20%22_score%22,%20%22_type%22\]" | jq '.fields[] | . + {count: 0} | . + {scripted: false}' | jq -s  --arg TITLE "${TOPIC_LOWERCASE}" '. | tostring | {"attributes": {"title": $TITLE, "timeFieldName": "@timestamp", "fields": . }}')
     fields_available=$(echo $refresh_payload | grep log.file.path | wc -l)
     if [ "$fields_available" != "0" ]; then

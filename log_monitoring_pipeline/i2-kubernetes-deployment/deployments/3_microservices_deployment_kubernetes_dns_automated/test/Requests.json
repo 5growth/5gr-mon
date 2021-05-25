@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ec3090f0-2b81-4cdf-9676-c468cb56a268",
+		"_postman_id": "d9537f0e-1e25-487a-bc76-8fcf2315af19",
 		"name": "5Growth Config Manager Requests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -179,6 +179,67 @@
 					"port": "8987",
 					"path": [
 						"alert",
+						"topic_name"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Scraper",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"nsid\": \"topic_name\",\n\"vnfid\": \"whatever\",\n\"performanceMetric\": \"logs\",\n\"kafkaTopic\": \"topic_name_scraper\",\n\"interval\": \"15\",\n\"expression\": \"regexp\"\n}\n"
+				},
+				"url": {
+					"raw": "http://10.9.8.188:8987/logScraper",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"188"
+					],
+					"port": "8987",
+					"path": [
+						"logScraper"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Scraper",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://10.9.8.188:8987/logScraper/topic_name",
+					"protocol": "http",
+					"host": [
+						"10",
+						"9",
+						"8",
+						"188"
+					],
+					"port": "8987",
+					"path": [
+						"logScraper",
 						"topic_name"
 					]
 				}

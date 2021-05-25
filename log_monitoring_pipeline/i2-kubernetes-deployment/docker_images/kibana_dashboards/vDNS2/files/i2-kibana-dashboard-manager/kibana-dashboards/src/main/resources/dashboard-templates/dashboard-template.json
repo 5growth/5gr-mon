@@ -17,8 +17,25 @@
         }
       },
       "references":[
-        {% for id in dashboard_id_list %}{% if loop.last %}{"id":"visualization_{{ id }}","name":"panel_{{ loop.index }}","type":"visualization"}{% else %}{"id":"visualization_{{ id }}","name":"panel_{{ loop.index }}","type":"visualization"},
-        {% endif %}{% endfor %}
+        {% for id in dashboard_id_list %}
+          {% if '_search' in id %}
+            {% if loop.last %}{
+              "id":"search_{{ id }}","name":"panel_{{ loop.index }}","type":"search"
+            }
+            {% else %}{
+              "id":"search_{{ id }}","name":"panel_{{ loop.index }}","type":"search"
+            },
+            {% endif %}
+          {% else %}
+            {% if loop.last %}{
+              "id":"visualization_{{ id }}","name":"panel_{{ loop.index }}","type":"visualization"
+            }
+            {% else %}{
+              "id":"visualization_{{ id }}","name":"panel_{{ loop.index }}","type":"visualization"
+            },
+            {% endif %}
+          {% endif %}
+        {% endfor %}
       ]
     },
     {

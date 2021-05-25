@@ -2,20 +2,6 @@
 
 Docker image containing the dashboards' handler and PostgreSQL to save the dashboards' data.
 
-## Before building the image
-
-Download [i2-kibana-dashboard-manager](https://gitlab.com/telcaria-code/5growth/i2-kibana-dashboard-manager), and follow its README to also install [i2-kibana-dashboard-generator](i2-kibana-dashboard-generator.git) within it. The steps are:
-
-```sh
-$ cd files
-$ git clone git@gitlab.com:telcaria-code/5growth/i2-kibana-dashboard-manager.git # change to the correct branch
-$ cd i2-kibana-dashboard-manager.git
-$ git clone --recursive git@gitlab.com:telcaria-code/5growth/i2-kibana-dashboard-generator.git # change to the correct branch
-$ mv i2-kibana-dashboard-generator kibana-dashboards
-$ cd kibana-dashboards
-$ mvn clean install -DskipTests
-```
-
 ## Build the image
 
 ```sh

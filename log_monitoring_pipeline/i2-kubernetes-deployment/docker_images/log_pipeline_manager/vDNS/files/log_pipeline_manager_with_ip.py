@@ -203,7 +203,10 @@ def send_to_elastalert(data):
     else:
         unit = "seconds"
 
-
+    if  alert_type == "not_match":
+        string4 = "es_host: " + elasticsearch_pod + "\nes_port: 9200\nindex: " + index_elast +"\ntype: frequency\nnum_events: 1\ntimeframe:\n " + unit + ": " + time_integer +"\nfilter:\n- query:\n    query_string:\n      query: \"NOT message: " + filter_field.lower() +  "\"" +  "\nalert:\n- command\ncommand: [\"/opt/elastalert/rules/comando.sh\", \"" + alert_id + "\", \"" + receiver + "\"]"
+    elif alert_type == "match":
+        string4 = "es_host: " + elasticsearch_pod + "\nes_port: 9200\nindex: " + index_elast +"\ntype: frequency\nnum_events: 1\ntimeframe:\n  " + unit + ": " + time_integer +"\nfilter:\n- query:\n    wildcard:\n      message: \"" + filter_field.lower() + "\""  + "\nalert:\n- command\ncommand: [\"/opt/elastalert/rules/comando.sh\", \"" + alert_id + "\", \"" + receiver + "\"]"
    
     # es_host = ELASTICSEARCH ip (dns)
     # type = any (para comprobar que funciona)
@@ -211,7 +214,7 @@ def send_to_elastalert(data):
     # @ Config Manager : target  es 10.9.8.154:8000/alert_receiver
     
     # string3 = "es_host: " + elasticsearch_pod + "\nes_port: 9200\nindex: " + index_elast +"\ntype: frequency\nnum_events: 1\ntimeframe:\n  " + unit + ": " + time_integer +  "\nalert:\n- command\ncommand: [\"/opt/elastalert/rules/comando.sh\", \"" + alert_name + "\", \"" + receiver + "\"]"
-    string4 = "es_host: " + elasticsearch_pod + "\nes_port: 9200\nindex: " + index_elast +"\ntype: frequency\nnum_events: 1\ntimeframe:\n  " + unit + ": " + time_integer +"\nfilter:\n- query:\n    wildcard:\n      message: \"" + filter_field.lower() + "\""  + "\nalert:\n- command\ncommand: [\"/opt/elastalert/rules/comando.sh\", \"" + alert_id + "\", \"" + receiver + "\"]"
+    # string4 = "es_host: " + elasticsearch_pod + "\nes_port: 9200\nindex: " + index_elast +"\ntype: frequency\nnum_events: 1\ntimeframe:\n  " + unit + ": " + time_integer +"\nfilter:\n- query:\n    wildcard:\n      message: \"" + filter_field.lower() + "\""  + "\nalert:\n- command\ncommand: [\"/opt/elastalert/rules/comando.sh\", \"" + alert_id + "\", \"" + receiver + "\"]"
 
     string2 = { "yaml": string4 }
 
@@ -226,7 +229,7 @@ def send_to_elastalert(data):
 def send_to_logScraper(data):
     logger.info("Send data to logScraper. Data: %s ", data)
     request_body = json.loads(json.dumps(data))
-    r = requests.post(logScraper, json=request_body)
+    r = requests.post(url_dashboard_manager + "/logScraper", json=request_body)
     response = r.json()
     logger.info("Response: scraper_id %s - nsid %s - vnfid %s - performanceMetric %s - kafkaTopic %s - interval %s - expression %s ", response["scraper_id"], data["nsid"], data["vnfid"], data["performanceMetric"], data["kafkaTopic"], data["interval"], data["expression"])
     return response
@@ -248,7 +251,7 @@ def create_dashboard(data):
 def delete_logScraper(logScraperId):
     logger.info("Time to delete logScraper %s", logScraperId)
     request_body = json.loads(json.dumps({'logScraperId': logScraperId}))
-    r = requests.delete(logScraper  + "/xxxx" , json=request_body)
+    r = requests.delete(url_dashboard_manager + "/logScraper/" + logScraperId , json=request_body)
     logger.info("Response: Code %s", r)
     
 

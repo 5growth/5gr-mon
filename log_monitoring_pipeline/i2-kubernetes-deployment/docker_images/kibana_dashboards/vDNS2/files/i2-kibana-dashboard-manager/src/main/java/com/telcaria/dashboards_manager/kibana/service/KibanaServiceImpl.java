@@ -52,15 +52,15 @@ public class KibanaServiceImpl implements KibanaService{
         kibanaDashboardDescription.setIndex(logEntity.getTopic().toLowerCase());
         kibanaDashboardDescription.setDashboardTitle(logEntity.getDashboardTitle());
 
-        // We need two visualizations
+        // We need three visualizations
         // First of all, we create the PIE graph
         KibanaDashboardVisualization kibanaVisualization_1 = new KibanaDashboardVisualization();
         kibanaVisualization_1.setTitle("Pie chart - " + logEntity.getTopic().toLowerCase());
         kibanaVisualization_1.setId(logEntity.getTopic().toLowerCase() + "_1");
         kibanaVisualization_1.setVisualizationType(GraphType.PIE.toString());
         kibanaVisualization_1.setIndex(logEntity.getTopic().toLowerCase());
-        kibanaVisualization_1.setYlabel_1("");
-        kibanaVisualization_1.setYlabel_2("");
+        kibanaVisualization_1.setYlabel_1("VNF Name");
+        kibanaVisualization_1.setYlabel_2("Log File");
         kibanaVisualization_1.setMetricNameX_1("host.name.keyword");
         kibanaVisualization_1.setMetricNameX_2("log.file.path.keyword");
 
@@ -70,14 +70,22 @@ public class KibanaServiceImpl implements KibanaService{
         kibanaVisualization_2.setId(logEntity.getTopic().toLowerCase() + "_2");
         kibanaVisualization_2.setVisualizationType(GraphType.BAR.toString());
         kibanaVisualization_2.setIndex(logEntity.getTopic().toLowerCase());
-        kibanaVisualization_2.setYlabel_1("");
-        kibanaVisualization_2.setYlabel_2("");
+        kibanaVisualization_2.setYlabel_1("VNF Name");
+        kibanaVisualization_2.setYlabel_2("Log File");
         kibanaVisualization_2.setMetricNameX_1("host.name.keyword");
         kibanaVisualization_2.setMetricNameX_2("log.file.path.keyword");
+
+        // Finally, we create the SEARCH graph
+        KibanaDashboardVisualization kibanaVisualization_search = new KibanaDashboardVisualization();
+        kibanaVisualization_search.setTitle("Search visualization - " + logEntity.getTopic().toLowerCase());
+        kibanaVisualization_search.setId(logEntity.getTopic().toLowerCase() + "_search");
+        kibanaVisualization_search.setVisualizationType(GraphType.SEARCH.toString());
+        kibanaVisualization_search.setIndex(logEntity.getTopic().toLowerCase());
 
         // Embed the visualizations to the dashboard.
         kibanaDashboardDescription.addVisualizationsItem(kibanaVisualization_1);
         kibanaDashboardDescription.addVisualizationsItem(kibanaVisualization_2);
+        kibanaDashboardDescription.addVisualizationsItem(kibanaVisualization_search);
 
         // Translate them
         List<String> kibanaObjects = generator.translate(kibanaDashboardDescription);
@@ -104,6 +112,7 @@ public class KibanaServiceImpl implements KibanaService{
         // Finally, generate the URL
         return getUrl(kibanaDashboardDescription.getDashboardId());
     }
+
     @Override
     public String createKibanaDashboard(Kpi kpi) {
 
@@ -215,6 +224,7 @@ public class KibanaServiceImpl implements KibanaService{
     public boolean deleteKibanaDashboard(Log logEntity) {
         return kibanaConnectorService.removeKibanaObject("visualization_" + logEntity.getTopic().toLowerCase() + "_1", "visualization") &&
                 kibanaConnectorService.removeKibanaObject("visualization_" + logEntity.getTopic().toLowerCase() + "_2", "visualization") &&
+                kibanaConnectorService.removeKibanaObject("search_" + logEntity.getTopic().toLowerCase() + "_search", "search") &&
                 kibanaConnectorService.removeKibanaObject(logEntity.getDashboardId(), "dashboard") &&
                 kibanaConnectorService.removeKibanaObject("index_" + logEntity.getTopic().toLowerCase(), "index-pattern");
     }
@@ -235,7 +245,7 @@ public class KibanaServiceImpl implements KibanaService{
     
 
     private String getUrl(String id) {
-        return kibanaProperties.getDashboardUrl() + "/app/kibana#/dashboard/" + id + "?embed=true&_g=(refreshInterval:(pause:!f,value:10000))";
+        return kibanaProperties.getDashboardUrl() + "/app/kibana#/dashboard/" + id + "?embed=true&_g=(refreshInterval:(pause:!f,value:10000),time:(from:now-1y,to:now))";
     }
 
 }

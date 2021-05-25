@@ -17,8 +17,8 @@ The following Docker images have been used for this deployment. Please verify th
 * **Fetch Kafka Topic:** available in this repository: [fetch_kafka_topic](../../docker_images/fetch_kafka_topic).
 * **Kafka Consumer:** available in this repository: [kafka_consumer](../../docker_images/kafka_consumer).
 * **Kibana:** available in this repository: [kibana](../../docker_images/kibana/vDNS2).
-* **Kibana Dashboard:** available in this repository: [kibana_dashboards](../../docker_images/kibana_dashboards/vDNS2).
-* **Log Pipeline Manager:** available in this repository: [log_pipeline_manager](../../docker_images/log_pipeline_manager/vDNS).
+* **Kibana Dashboard:** available in this repository: [kibana_dashboards](../../docker_images/kibana_dashboards/vDNS2_scraper).
+* **Log Pipeline Manager:** available in this repository: [log_pipeline_manager](../../docker_images/log_pipeline_manager/vDNS2).
 * **Logstash Pipeline Manager:** available in this repository: [logstash_pipeline_manager](../../docker_images/logstash_pipeline_manager/v2).
 
 ## Steps to be followed
@@ -40,7 +40,7 @@ Before running the pods, check the following:
 
 **And IMPORTANT: go to the [Kibana Dashboard pod specification](pods/kibana_dashboard_pod.yml) and change the third argument (IP address 10.9.8.188) for the IP in which you are executing this scenario.**
 
-**Moreover, modify the *<kafka_ip_address>* argument in the following pods: [Create Kafka Topic](pods/create_kafka_topic_pod.yml), [Delete Kafka Topic](pods/delete_kafka_topic_pod.yml), [Fetch Kafka Topic](pods/fetch_kafka_topic_pod.yml), [Kafka Consumer](pods/kafka_consumer_pod.yml) and [Logstash](pods/logstash_pipeline_manager_pod.yml).** For example, 10.5.1.188 is one valid IP address for Kafka in one of the testbeds of Mirantis.
+**Moreover, modify the *<kafka_ip_address>* argument in the following pods: [Create Kafka Topic](pods/create_kafka_topic_pod.yml), [Delete Kafka Topic](pods/delete_kafka_topic_pod.yml), [Fetch Kafka Topic](pods/fetch_kafka_topic_pod.yml), [Kafka Consumer](pods/kafka_consumer_pod.yml), [Kibana Dashboard](pods/kibana_dashboard_pod.yml) and [Logstash](pods/logstash_pipeline_manager_pod.yml).** For example, 10.5.1.188 is one valid IP address for Kafka in one of the testbeds of Mirantis.
 
 Then, execute the following (you have to be in the directory containing this README to execute these commands).
 
@@ -136,4 +136,10 @@ $ kubectl delete -f ./pods/kibana_pod.yml
 $ kubectl delete -f ./pods/kibana_dashboard_pod.yml
 $ kubectl delete -f ./pods/log_pipeline_manager_pod.yml
 $ kubectl delete -f ./pods/logstash_pipeline_manager_pod.yml
+```
+
+Or directly this one:
+
+```sh
+$ kubectl delete -f pods
 ```

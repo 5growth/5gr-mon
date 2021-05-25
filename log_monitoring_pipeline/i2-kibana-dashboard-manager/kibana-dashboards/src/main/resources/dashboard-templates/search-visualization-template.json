@@ -1,0 +1,34 @@
+{
+  "objects": [
+    {
+      "id": "search_{{ id }}",
+      "type": "search",
+      "version": 1,
+      "attributes": {
+        "title": "{{ title }}",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"index\":\"index_{{ index }}\",\"highlightAll\": true, \"version\": true,\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "columns": [
+          "host.name",
+          "message"
+        ],
+        "sort": [
+          [
+            "@timestamp",
+            "desc"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "index_{{ index }}",
+      "type": "index-pattern",
+      "version": 1,
+      "attributes": {
+        "title": "{{ index }}"
+      }
+    }
+  ]
+}

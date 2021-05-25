@@ -22,5 +22,5 @@ rm -r /tmp/i2-kibana-dashboard-manager
 
 # Start Dashboards manager service
 echo "Start Dashboard manager"
-/usr/bin/java -jar /usr/bin/dashboard_manager/dashboards_manager.jar > /var/log/dashboards_manager.log
-#/usr/bin/java -jar /usr/bin/dashboard_manager/dashboards_manager.jar
+#/usr/bin/java -jar /usr/bin/dashboard_manager/dashboards_manager.jar > /var/log/dashboards_manager.log
+/usr/bin/java -jar /usr/bin/dashboard_manager/dashboards_manager.jar

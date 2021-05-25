@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: log-pipeline-manager-container
-          image: log_pipeline_manager:vDNS
+          image: log_pipeline_manager:vDNS2
           imagePullPolicy: Never
           ports:
             - containerPort: 8987

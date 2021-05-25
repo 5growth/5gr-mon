@@ -19,7 +19,7 @@ The following Docker images have been used for this deployment. Please verify th
 * **Kafka:** available in this repository: [kafka](../../docker_images/kafka/vDNS2).
 * **Kafka Consumer:** available in this repository: [kafka_consumer](../../docker_images/kafka_consumer).
 * **Kibana:** available in this repository: [kibana](../../docker_images/kibana/vDNS2).
-* **Kibana Dashboard:** available in this repository: [kibana_dashboards](../../docker_images/kibana_dashboards/vDNS2).
+* **Kibana Dashboard:** available in this repository: [kibana_dashboards](../../docker_images/kibana_dashboards/vDNS2_scraper).
 * **Log Pipeline Manager:** available in this repository: [log_pipeline_manager](../../docker_images/log_pipeline_manager/vDNS).
 * **Logstash Pipeline Manager:** available in this repository: [logstash_pipeline_manager](../../docker_images/logstash_pipeline_manager/v2).
 * **ZooKeeper:** available in this repository: [zookeeper](../../docker_images/zookeeper/v2).
@@ -160,10 +160,6 @@ $ curl --location --request POST 'http://<node_containing_log_pipeline_manager_p
 
 If you list the topics currently created, you will see that <topic_name> has been created.
 
-```sh
-$ /bin/bash scripts/6_check_topic_list.sh
-```
-
 ### 3. Create Kibana Dashboard from the Config Manager side
 
 Create a new dashboard for the already created topic in the platform. Use the IP address of the node that contains the Log Pipeline Manager pod, changing *<node_containing_log_pipeline_manager_pod_ip_address>* as a result. The variable *<topic_name>*, also known as nsId, must be set before sending the request.
@@ -196,7 +192,7 @@ Kibana will respond with the <dashboardId> parameter, which will be later on use
 
 Create a new Elastalert rule for the already created topic in the platform. Use the IP address of the node that contains the Log Pipeline Manager pod, changing *<node_containing_log_pipeline_manager_pod_ip_address>* as a result. The variable *<topic_name>*, also known as nsId, must be set before sending the request.
 
-You also have to change the content of *query* field, to put the condition to be met to trigger the alarm. For example, put there a "*3*", so that if the message contains a 3, it triggers the alarm.
+You also have to change the content of *query* field, to put the condition to be met to trigger the alarm. For example, put there a "*3*", so that if the message contains a 3, it triggers the alarm. You can also test the case of "not_match" in the "kind" field, so that the alert will be triggered when the first message that does not match with the query field arrives.
 
 > You can also execute this request with the POST Create Alert request from the [Postman collection](test/Requests.json). _Remember to change the IP address, the IP address of the target and the topic name in that case._ 
 
@@ -240,9 +236,58 @@ $ kubectl exec -it $elastalert_pod -- ls ../elastalert/rules
 $ kubectl exec -it $elastalert_pod -- cat ../elastalert/rules/<alertId>.yaml
 ```
 
-> TBC: LogScraper
+### 5. Create LogScraper
 
-### 5. Run Filebeat
+With the following steps, you can create a LogScraper listening to the topic that you have already created, publishing the data in another Kafka topic.
+
+First of all, create the Kafka topic to be used by sending this request to the Create Kafka Topic microservice (just change <node_containing_create_kafka_topic_pod_ip_address> and <topic_name_scraper> accordingly):
+
+```sh
+$ curl --location --request POST 'http://<node_containing_create_kafka_topic_pod_ip_address>:8190/create_kafka_topic' \
+--header 'Content-Type: application/json' \
+--data-raw '{ "topic": "<topic_name_scraper>" }'
+```
+
+If you list the topics currently created, you will see that <topic_name_scraper> has been created.
+
+```sh
+$ /bin/bash scripts/6_check_topic_list.sh
+```
+
+Then, send the request to the Log Pipeline Manager to create the LogScraper. Remember to change <node_containing_log_pipeline_manager_pod_ip_address>, <topic_name> and <topic_name_scraper> with their correct values. Note that this scraper will only send data in which the number "3" is included, according to the expression field provided.
+
+> You can also execute this request with the POST Create Scraper request from the [Postman collection](test/Requests.json). _Remember to change the IP address, the topic names and the expression in that case._ 
+
+```sh
+$ curl --location --request POST 'http://<node_containing_log_pipeline_manager_pod_ip_address>:8987/logScraper' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"nsid": "<topic_name>",
+"vnfid": "whatever",
+"performanceMetric": "logs",
+"kafkaTopic": "<topic_name_scraper>",
+"interval": "15",
+"expression": "3"
+}'
+```
+
+The response should be like the following one. Take note of the *<scraper_id>* provided, because it will be used afterwards for deleting the rule.
+
+```
+{
+  "expression":"3",
+  "interval":"15",
+  "kafkaTopic":"<topic_name_scraper>",
+  "nsid":"<topic_name>",
+  "performanceMetric":"logs",
+  "scraper_id":"<scraper_id>",
+  "vnfid":"whatever"
+}
+```
+
+If you check the logs in the Dashboards Manager, you will check that a Scraper is running and gathering data from Elasticsearch to publish new data in Kafka each "interval" seconds.
+
+### 6. Run Filebeat
 
 Follow the following steps to install Filebeat in a specific server (if not installed previously):
 
@@ -288,7 +333,7 @@ $ filebeat test output
 $ filebeat -e -d "publish" # alternative: systemctl start filebeat -> and check the logs with journalctl -fu filebeat
 ```
 
-### 6. Start server receiving alerts
+### 7. Start server receiving alerts
 
 Since http-server pod is already running a http server, just execute in a different terminal the following command:
 
@@ -298,7 +343,7 @@ $ watch -n 5 sudo kubectl logs $http_server_pod
 
 It will appear listening to requests on the port 8000 every 5 seconds. This port is used when creating the alert in Step 8. The target was defined on its IP:port, and therefore after generating data in Step 11, an Alert will appear on this terminal.
 
-### 7. Generate data to be published by Filebeat
+### 8. Generate data to be published by Filebeat
 
 Open a new terminal in the server containing Filebeat and execute the following commands. After this, you will start publishing data to Filebeat (10 metrics, 1 per second). Remember to change <topic_name> consequently.
 
@@ -311,12 +356,25 @@ In the terminal containing the HTTP server logs, you will receive then a request
 
 ```
 04/05/2021 14:27:52 INFO Request received - POST /alert_receiver
-04/05/2021 14:27:52 INFO Data received: {'startsAt': 'Tue May  4 14:27:52 UTC 2021', 'alertname': 'c023539a-ace4-11eb-b80c-e2b576bed96e'}
+04/05/2021 14:27:52 INFO Data received: {'startsAt': 'Tue May  4 16:27:52 UTC 2021', 'alertname': 'c023539a-ace4-11eb-b80c-e2b576bed96e'}
 ```
 
-Moreover, check that the system receives the messages sent by the publisher (you can go to the Kibana GUI with http://<node_containing_kibana_pod_ip_address>:5601 and take a look to the Kibana index receiving the data, the Kibana dashboard generated, the Elasticsearch index increasing the counter of messages received, etc.).
+Moreover, check that the system receives the messages sent by the publisher (you can go to the Kibana GUI with http://<node_containin_kibana_pod_ip_address>:5601 and take a look to the Kibana index receiving the data, the Kibana dashboard generated, the Elasticsearch index increasing the counter of messages received, etc.).
 
-### 8. (Optional) Check messages received in a Kafka consumer
+And also, check that the LogScraper is sending the data to the corresponding Kafka topic by using a Kafka consumer:
+
+```sh
+$ kubectl exec -it $kafka_pod -- /bin/bash
+$ /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic <topic_name_scraper> --from-beginning
+```
+
+You will see something like this:
+
+```
+{"record":[{"agent":"be9d9608-db3b-4fe0-b9c0-0554f59adc30","log_path":"\/var\/log\/test1.log","host":"5geve-k3s-master-monit","message":"1","timestamp":"2021-05-21T11:01:26.713Z"},{"agent":"be9d9608-db3b-4fe0-b9c0-0554f59adc30","log_path":"\/var\/log\/test1.log","host":"5geve-k3s-master-monit","message":"2","timestamp":"2021-05-21T11:01:26.713Z"},{"agent":"be9d9608-db3b-4fe0-b9c0-0554f59adc30","log_path":"\/var\/log\/test1.log","host":"5geve-k3s-master-monit","message":"3","timestamp":"2021-05-21T11:01:26.713Z"},{"agent":"be9d9608-db3b-4fe0-b9c0-0554f59adc30","log_path":"\/var\/log\/test1.log","host":"5geve-k3s-master-monit","message":"4","timestamp":"2021-05-21T11:01:26.713Z"},{"agent":"be9d9608-db3b-4fe0-b9c0-0554f59adc30","log_path":"\/var\/log\/test1.log","host":"5geve-k3s-master-monit","message":"5","timestamp":"2021-05-21T11:01:26.713Z"}]}
+```
+
+### 9. (Optional) Check messages received in a Kafka consumer
 
 You can also run the subscriber in order to confirm that it receives the messages sent by the publisher (i.e. Filebeat).
 
@@ -328,9 +386,32 @@ $ cd /opt/kafka
 $ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic <topic_name> --from-beginning
 ```
 
-### 9. Delete the Alert created by the Config Manager
+### 10. Delete the LogScraper created by the Config Manager
 
-> BEFORE THIS: delete logscraper
+Send the following request. Remember to change <scraperId> with the one obtained when the scraper was created.
+
+> You can also execute this request with the DELETE Delete Scraper request from the [Postman collection](test/Requests.json). _Remember to change the IP address and the topic name (the topic name, in this case, has to be changed with the scraperId) in that case._ 
+
+```sh
+$ curl --location --request DELETE 'http://<node_containing_log_pipeline_manager_pod_ip_address>:8987/logScraper/<scraperId>' \
+--header 'Content-Type: application/json'
+```
+
+Moreover, delete the Kafka topic used with the Delete Kafka Topic microservice. For doing this, just change <node_containing_delete_kafka_topic_pod_ip_address> and <topic_name_scraper> accordingly:
+
+```sh
+$ curl --location --request DELETE 'http://<node_containing_delete_kafka_topic_pod_ip_address>:8290/delete_kafka_topic' \
+--header 'Content-Type: application/json' \
+--data-raw '{ "topic": "<topic_name_scraper>" }'
+```
+
+If you list the topics currently created, you will see that <topic_name_scraper> has been deleted.
+
+```sh
+$ /bin/bash scripts/6_check_topic_list.sh
+```
+
+### 11. Delete the Alert created by the Config Manager
 
 Send the following request. Remember to change <alertId> with the one obtained when the rule was created.
 
@@ -341,7 +422,7 @@ $ curl --location --request DELETE 'http://<node_containing_log_pipeline_manager
 --header 'Content-Type: application/json'
 ```
 
-### 10. Delete the Dashboard created by the Config Manager
+### 12. Delete the Dashboard created by the Config Manager
 
 Send the following request, using the <dashboardId> you obtained in step 7.
 
@@ -352,7 +433,7 @@ $ curl --location --request DELETE 'http://<node_containing_log_pipeline_manager
 --header 'Content-Type: application/json'
 ```
 
-### 11. Delete the topic created by the Config Manager
+### 13. Delete the topic created by the Config Manager
 
 Remove the topic created previously by the Config Manager by sending this request from the Config Manager side, changing *<node_containing_log_pipeline_manager_pod_ip_address>* and *<topic_name>* as a result.
 
@@ -369,9 +450,7 @@ If you list the topics currently created, you will see that <topic_name> has bee
 $ /bin/bash scripts/6_check_topic_list.sh
 ```
 
-### 12. Cleaning the scenario
-
-> TO BE REVIEWED THIS - After this, you can close Filebeat (or execute *systemctl stop filebeat* if you used the other alternative), ElastAlert and the HTTP server in the terminals opened for these purposes.
+### 14. Cleaning the scenario
 
 To clean the scenario, you can execute the following commands:
 
@@ -389,6 +468,12 @@ $ kubectl delete -f ./pods/kibana_dashboard_pod.yml
 $ kubectl delete -f ./pods/log_pipeline_manager_pod.yml
 $ kubectl delete -f ./pods/logstash_pipeline_manager_pod.yml
 $ kubectl delete -f ./pods/zookeeper_pod.yml
+```
+
+Or directly this one:
+
+```sh
+$ kubectl delete -f pods
 ```
 
 Also remove Filebeat log file for future executions:

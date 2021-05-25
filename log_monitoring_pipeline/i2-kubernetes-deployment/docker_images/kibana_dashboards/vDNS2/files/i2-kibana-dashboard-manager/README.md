@@ -1,20 +1,21 @@
 # Kibana dashboards manager
-To include kibana-dashboard-generator module use `--recursive` flag (do it only the first time, if the repository does not contain the kibana-dashboard-generator repository)
 
-```git clone --recursive git@gitlab.com:telcaria-code/5growth/i2-kibana-dashboard-generator.git```
+To include kibana-dashboard-generator (if not included):
+
+```sh
+cp -r ../i2-kibana-dashboard-generator kibana-dashboards
+```
 
 ## Build
 
 Before building the application, remember that, depending on the scenario where this component has to be deployed, the application.properties variables must change consequently
 
-
 ```shell script
 # within this project
-mv i2-kibana-dashboard-generator kibana-dashboards
 cd kibana-dashboards
-mvn clean install # install the module in local .m2 maven repository
+mvn clean install -DskipTests # install the module in local .m2 maven repository
 cd ..
-mvn clean install
+mvn clean install -DskipTests
 ```
 
 ## REST endpoint docs

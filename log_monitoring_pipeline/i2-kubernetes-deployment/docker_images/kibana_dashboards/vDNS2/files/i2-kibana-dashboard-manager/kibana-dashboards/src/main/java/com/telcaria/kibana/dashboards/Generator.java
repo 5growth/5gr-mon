@@ -85,6 +85,9 @@ public class Generator {
             case "bar":
                 template = templateDirectory + "bar-visualization-template.json";
                 break;
+            case "search":
+                template = templateDirectory + "search-visualization-template.json";
+                break;
             default:
                 //TODO: Handle unknown visualization type
                 break;
@@ -131,10 +134,20 @@ public class Generator {
             else {
                 x = 24;
             }
-            panelsJson = panelsJson.concat("{\\\"gridData\\\":{\\\"w\\\":24,\\\"h\\\":15,\\\"x\\\":" + x + ",\\\"y\\\":" + y + ",\\\"i\\\":\\\"" + (i+1) + "\\\"},\\\"panelIndex\\\"" +
-                    ":\\\"" + (i+1) + "\\\",\\\"embeddableConfig\\\":{},\\\"panelRefName\\\":\\\"panel_" + (i + 1) + "\\\"}");
             if (i < dashboardsList.size() - 1) {
+                panelsJson = panelsJson.concat("{\\\"gridData\\\":{\\\"w\\\":24,\\\"h\\\":15,\\\"x\\\":" + x + ",\\\"y\\\":" + y + ",\\\"i\\\":\\\"" + (i+1) + "\\\"},\\\"panelIndex\\\"" +
+                                                       ":\\\"" + (i+1) + "\\\",\\\"embeddableConfig\\\":{},\\\"panelRefName\\\":\\\"panel_" + (i + 1) + "\\\"}");
                 panelsJson = panelsJson.concat(",");
+            }
+            else {
+                if ( i % 2 == 0) {
+                    panelsJson = panelsJson.concat("{\\\"gridData\\\":{\\\"w\\\":48,\\\"h\\\":15,\\\"x\\\":" + x + ",\\\"y\\\":" + y + ",\\\"i\\\":\\\"" + (i+1) + "\\\"},\\\"panelIndex\\\"" +
+                                                           ":\\\"" + (i+1) + "\\\",\\\"embeddableConfig\\\":{},\\\"panelRefName\\\":\\\"panel_" + (i + 1) + "\\\"}");
+                }
+                else {
+                    panelsJson = panelsJson.concat("{\\\"gridData\\\":{\\\"w\\\":24,\\\"h\\\":15,\\\"x\\\":" + x + ",\\\"y\\\":" + y + ",\\\"i\\\":\\\"" + (i+1) + "\\\"},\\\"panelIndex\\\"" +
+                                                           ":\\\"" + (i+1) + "\\\",\\\"embeddableConfig\\\":{},\\\"panelRefName\\\":\\\"panel_" + (i + 1) + "\\\"}");
+                }
             }
         }
         return panelsJson.concat("]");

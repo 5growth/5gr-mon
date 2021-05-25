@@ -1,15 +1,41 @@
 FROM ubuntu:xenial
 
 # Install packages
-RUN apt update
 RUN apt-get update
-RUN apt-get install -y openjdk-8-jre openjdk-8-jdk python3 python3-pip curl locales nano git iputils-ping apt-transport-https wget jq
+RUN apt-get install -y openjdk-8-jdk curl locales nano git iputils-ping
+
+# Install Python 3.5.2
+RUN apt-get install -y build-essential checkinstall
+RUN apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+ADD https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz /usr/src
+RUN cd /usr/src && tar xzf /usr/src/Python-3.5.2.tgz
+#WORKDIR /usr/src/Python-3.5.2
+
+RUN cd /usr/src/Python-3.5.2 \
+	&& ./configure --enable-optimizations \
+	&& make altinstall
+
+WORKDIR /
+
+# Install pip3 8.1.1
+RUN apt-get install -y python3-pip
+RUN pip3 install --upgrade pip==8.1.1
 
 # Build locales database
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8
 ENV LANG en_US.UTF-8
+
+# Install Python libraries
+RUN export LC_ALL="en_US.UTF-8"
+RUN export LC_CTYPE="en_US.UTF-8"
+
+COPY files/requirements.txt /
+RUN pip3 install -r requirements.txt
+
+# Install packages
+RUN apt-get install -y openjdk-8-jre apt-transport-https wget jq
 
 # Set JAVA_HOME
 RUN sed -i '/^JAVA_HOME.*/d' /etc/environment && echo JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd4 | tee -a /etc/environment > /dev/null
@@ -41,15 +67,6 @@ RUN sed -i -e 's/# config.reload.interval: 3s/config.reload.interval: 1s/' /etc/
 RUN sed -i -e 's/#xpack.monitoring.enabled: false/xpack.monitoring.enabled: true/' /etc/logstash/logstash.yml
 RUN sed -i -e 's/#xpack.monitoring.elasticsearch.username: logstash_system/xpack.monitoring.elasticsearch.username: elastic/' /etc/logstash/logstash.yml
 RUN sed -i -e 's/#xpack.monitoring.elasticsearch.password: password/xpack.monitoring.elasticsearch.password: changeme/' /etc/logstash/logstash.yml
-
-# Install Python libraries for Logstash pipeline manager
-RUN export LC_ALL="en_US.UTF-8"
-RUN export LC_CTYPE="en_US.UTF-8"
-RUN pip3 install kafka-python
-RUN pip3 install requests
-RUN pip3 install flask-swagger
-RUN pip3 install coloredlogs
-RUN pip3 install waitress
 
 # Copy run_logstash.sh script
 COPY files/run_logstash.sh /usr/bin/logstash_pipeline_manager

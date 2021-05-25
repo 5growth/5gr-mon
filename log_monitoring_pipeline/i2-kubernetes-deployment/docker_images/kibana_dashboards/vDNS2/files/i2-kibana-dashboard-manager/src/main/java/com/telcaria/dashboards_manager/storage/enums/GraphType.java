@@ -21,7 +21,8 @@ public enum GraphType {
   PIE ("pie"),
   COUNTER("metric"),
   GAUGE("gauge"),
-  BAR("bar");
+  BAR("bar"),
+  SEARCH("search");
 
   private final String name;
 

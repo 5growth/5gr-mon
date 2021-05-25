@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: kibana-dashboard-container
-          image: kibana_dashboard:vDNS2
+          image: kibana_dashboard:vDNS2_scraper
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
@@ -26,6 +26,7 @@ spec:
             - "kibana"
             - "elasticsearch"
             - "10.9.8.188"
+            - "<kafka_ip_address>"
           env:
             - name: pod_namespace
               valueFrom:

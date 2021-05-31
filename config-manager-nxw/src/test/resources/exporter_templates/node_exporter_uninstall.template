@@ -1,0 +1,22 @@
+#!/bin/bash
+
+sudo systemctl stop node_exporter
+
+sudo systemctl disable node_exporter
+
+rm -f /etc/sysconfig/node_exporter
+
+rm -f /etc/systemd/system/node_exporter.service
+
+sudo systemctl daemon-reload
+
+sudo userdel node_exporter
+rm -f /usr/sbin/node_exporter
+
+
+
+
+
+
+
+

@@ -23,21 +23,22 @@ import it.nextworks.nfvmano.configmanager.rvmagent.model.PrometheusCollector;
 import it.nextworks.nfvmano.configmanager.rvmagent.model.RVMAgent;
 import it.nextworks.nfvmano.configmanager.rvmagent.model.RVMAgentExporter;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 public class RVMAgentService implements RVMAgentRepo {
 
+    private final String kafka_bootstrap_servers;
     private RVMAgentConnector rvmAgentConnector;
 
     private RVMAgentRepo db;
     private RVMAgent rvmAgent;
     private static Integer id = 0;
 
-    public RVMAgentService(RVMAgentConnector rvmAgentConnector, RVMAgentRepo db) {
+    public RVMAgentService(RVMAgentConnector rvmAgentConnector, RVMAgentRepo db, String kafka_bootstrap_servers) {
         this.rvmAgentConnector = rvmAgentConnector;
         this.db = db;
+        this.kafka_bootstrap_servers = kafka_bootstrap_servers;
     }
 
     private String getRVMAgentId(){
@@ -48,6 +49,8 @@ public class RVMAgentService implements RVMAgentRepo {
     @Override
     public Future<RVMAgentCreateResponse> save(RVMAgent rvmAgent) {
         if (rvmAgent.getRvmAgentId() == null){
+            rvmAgent.setBootstrapServers(kafka_bootstrap_servers);
+            rvmAgent.setRvmagentIdentifierMode(this.rvmAgentConnector.getRvmagentIdentifierMode());
             rvmAgent.setRvmAgentId(getRVMAgentId());
             rvmAgent.start_kafka_client();
             Thread newThread = new Thread(rvmAgent);
@@ -63,6 +66,8 @@ public class RVMAgentService implements RVMAgentRepo {
             return Future.succeededFuture(rvmAgentFromDB.getRVMAgentCreateResponse());
         }else{
             rvmAgent.setRvmAgentId(agent_id);
+            rvmAgent.setBootstrapServers(kafka_bootstrap_servers);
+            rvmAgent.setRvmagentIdentifierMode(this.rvmAgentConnector.getRvmagentIdentifierMode());
             rvmAgent.start_kafka_client();
             Thread newThread = new Thread(rvmAgent);
             newThread.start();
@@ -78,7 +83,7 @@ public class RVMAgentService implements RVMAgentRepo {
     }
 
     @Override
-    public Future<String> deleteAgentById(String agentId) {
+    public Future<Set<String>> deleteAgentById(String agentId) {
         Future<Optional<List<RVMAgent>>> rvmAgentFuture =  db.findById(agentId);
         if (rvmAgentFuture.result().get().isEmpty()){
             return Future.succeededFuture(null);
@@ -90,7 +95,7 @@ public class RVMAgentService implements RVMAgentRepo {
             e.printStackTrace();
         }
         db.deleteAgentById(agentId);
-        return Future.succeededFuture(agentId);
+        return Future.succeededFuture(Collections.singleton(agentId));
     }
 
 
@@ -114,10 +119,21 @@ public class RVMAgentService implements RVMAgentRepo {
         RVMAgentExporter retrun_rvmAgentExporter = new RVMAgentExporter();
         Future<Optional<List<RVMAgent>>> rvmAgentFuture =  db.findById(rvmAgentExporter.getAgentId());
         RVMAgent rvmAgent = rvmAgentFuture.result().get().get(0);
-//        AddPrometheusCollector addPrometheusCollector = rvmAgent.addPrometheusCollector(rvmAgentInstallExporter.getCollector());
-        PrometheusCollector return_addPrometheusCollector = rvmAgent.addPrometheusCollector(rvmAgentExporter.getInstallCollector());
+        PrometheusCollector return_addPrometheusCollector = null;
+        PrometheusCollector prometheusCollector = rvmAgentExporter.getInstallCollector();
+        if (prometheusCollector != null) {
+            if (prometheusCollector.getNodeUrlSuffix() != null) {
+                return_addPrometheusCollector = rvmAgent.addPrometheusCollector(rvmAgentExporter.getInstallCollector());
+            }
+        }
         RVMAgentCommand returnRVMAgentCommand = rvmAgent.executeCommand(rvmAgentExporter.getInstallCommand());
-        retrun_rvmAgentExporter.setCollector(return_addPrometheusCollector);
+        if(prometheusCollector != null) {
+            if (prometheusCollector.getNodeUrlSuffix() != null) {
+                if (return_addPrometheusCollector != null) {
+                    retrun_rvmAgentExporter.setCollector(return_addPrometheusCollector);
+                }
+            }
+        }
         retrun_rvmAgentExporter.setCommand(returnRVMAgentCommand);
         return Future.succeededFuture(Optional.ofNullable(retrun_rvmAgentExporter));
     }
@@ -130,7 +146,9 @@ public class RVMAgentService implements RVMAgentRepo {
         RVMAgentExporter rvmAgentExporter = new RVMAgentExporter();
         rvmAgentExporter.setAgentId(agentId);
         rvmAgentExporter.setExporter(prometheusExporterId);
-        rvmAgent.delPrometheusCollector(rvmAgentExporter.getPrometheusCollectorId());
+        if (rvmAgentExporter.getPort() != null) {
+            rvmAgent.delPrometheusCollector(rvmAgentExporter.getPrometheusCollectorId());
+        }
         RVMAgentCommand returnRVMAgentCommand = rvmAgent.executeCommand(rvmAgentExporter.getUninstallCommand());
         retrun_rvmAgentExporter.setPort(rvmAgentExporter.getPort());
         retrun_rvmAgentExporter.setHost(rvmAgentExporter.getHost());
@@ -154,11 +172,11 @@ public class RVMAgentService implements RVMAgentRepo {
     }
 
     @Override
-    public Future<String> deletePrometheusCollectorById(String agentId, String prometheusCollectorId) {
+    public Future<Set<String>> deletePrometheusCollectorById(String agentId, String prometheusCollectorId) {
         Future<Optional<List<RVMAgent>>> rvmAgentFuture =  db.findById(agentId);
         RVMAgent rvmAgent = rvmAgentFuture.result().get().get(0);
         rvmAgent.delPrometheusCollector(prometheusCollectorId);
-        return Future.succeededFuture(prometheusCollectorId);
+        return Future.succeededFuture(Collections.singleton(prometheusCollectorId));
     }
 
 

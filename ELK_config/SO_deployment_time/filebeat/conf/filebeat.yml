@@ -1,0 +1,13 @@
+
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /usr/share/filebeat/logs/test1.log
+  multiline.pattern: '^\['
+  multiline.negate: true
+  multiline.match: after
+
+output.logstash:
+  # Array of hosts to connect to.
+  hosts: ["logstash:5044"]

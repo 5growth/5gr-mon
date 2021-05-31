@@ -1,0 +1,13 @@
+{
+  "agent_id": "vm_agent_1",
+  "host": "127.0.0.1",
+  "prometheus_topic": "prometheus",
+  "port": "9100",
+  "node_url_suffix": "/metrics",
+  "prometheus_job": "vm_agent_1",
+  "interval": "1",
+  "labels":[
+    {"key":"instance",
+      "value": "vm_agent_1:9100"}
+  ]
+}

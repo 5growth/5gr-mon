@@ -1,0 +1,15 @@
+{
+  "name": "test_dash4",
+  "panels": [
+    {
+      "title": "mp1(VcpuUsageMean.spr2)",
+      "query": "sum(rate(http_requests_total[1m]))",
+      "size": null
+    }
+  ],
+  "users": [
+    "pippo"
+  ],
+  "plottedTime": 61,
+  "refreshTime": "5s"
+}

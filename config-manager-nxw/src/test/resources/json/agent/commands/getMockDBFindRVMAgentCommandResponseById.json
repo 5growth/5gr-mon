@@ -1,0 +1,7 @@
+{
+  "command_id": "1",
+  "agent_id": "vm_agent_1",
+  "errs": "",
+  "outs": "total 120\ndr-xr-xr-x  13 root    root        0 Feb 14 07:42 sys\ndrwxrwxrwt  28 root    root    36864 Feb 14 09:54 tmp\ndrwxr-xr-x  14 root    root     4096 Jul 31  2020 usr\ndrwxr-xr-x  14 root    root     4096 Jul 31  2020 var\nSun 14 Feb 2021 09:54:56 AM EET\narg1_value\n",
+  "returncode": "0"
+}

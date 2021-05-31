@@ -1,0 +1,16 @@
+{
+  "name": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+  "endpoint": [
+    {
+      "address": "192.168.100.1",
+      "port": "8989"
+    }
+  ],
+  "vnfdId": "spr2",
+  "nsId": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175",
+  "collectionPeriod": 15,
+  "metrics_path": "/metrics/NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+  "exporter": "blackbox_exporter",
+  "params_string": "/target/http://192.168.100.100:80/module/http_2xx-general",
+  "destination_vnf": "webserver"
+}

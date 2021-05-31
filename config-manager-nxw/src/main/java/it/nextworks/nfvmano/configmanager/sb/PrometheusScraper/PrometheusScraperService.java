@@ -18,15 +18,15 @@ package it.nextworks.nfvmano.configmanager.sb.PrometheusScraper;
 
 import io.vertx.core.Future;
 import io.vertx.ext.web.client.WebClient;
-import it.nextworks.nfvmano.configmanager.alerts.model.Alert;
-import it.nextworks.nfvmano.configmanager.common.KVP;
 import it.nextworks.nfvmano.configmanager.prometheusScraper.PrometheusScraperRepo;
 import it.nextworks.nfvmano.configmanager.prometheusScraper.model.PrometheusScraper;
 import it.nextworks.nfvmano.configmanager.sb.prometheus.PrometheusConnector;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.model.*;
+import it.nextworks.nfvmano.configmanager.sb.prometheus.model.CalcGroups;
+import it.nextworks.nfvmano.configmanager.sb.prometheus.model.CalcLabels;
+import it.nextworks.nfvmano.configmanager.sb.prometheus.model.CalcRules;
+import it.nextworks.nfvmano.configmanager.sb.prometheus.model.CalculateRules;
 import org.apache.kafka.clients.producer.KafkaProducer;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -83,8 +83,6 @@ public class PrometheusScraperService implements PrometheusScraperRepo {
         }
         concurrentHashMap.get(key).put(prometheusScraper.getPerformanceMetric(), prometheusScraper.getKafkaTopic());
         Future<Void> voidFuture = loadCalculateInPrometheus(prometheusScraper);
-
-
         return future;
     }
 
@@ -175,7 +173,6 @@ public class PrometheusScraperService implements PrometheusScraperRepo {
         CalcGroups cmGroup = getCMGroup(groups);
         CalcRules converted = convert(scraper);
         extendGroup(cmGroup, converted);
-
         groups.add(cmGroup);
         rules.setGroups(groups);
         pConnector.setCalculateRules(rules);

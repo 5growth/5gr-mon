@@ -128,6 +128,9 @@ export -f start_agent
 
 main()
 {
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+    echo "127.0.0.1       $HOSTNAME" >> /etc/hosts
     {% if install %}
     install_agent
     {% endif %}

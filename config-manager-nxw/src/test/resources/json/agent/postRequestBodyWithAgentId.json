@@ -1,0 +1,6 @@
+{
+  "agent_id": "vm_agent_1111111111111111111111",
+  "install_method": "cloud_init",
+  "description": "VNF_1",
+  "daemon_user": "ubuntu"
+}

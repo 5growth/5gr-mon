@@ -1,0 +1,62 @@
+{
+  "global": null,
+  "route": {
+    "receiver": "default",
+    "group_wait": "1s",
+    "group_interval": "1s",
+    "repeat_interval": "1s",
+    "group_by": [
+      "cluster",
+      "alertname"
+    ],
+    "routes": [
+      {
+        "match": {
+          "alertname": "cec35855-5220-4485-b635-c67b3ad68d87"
+        },
+        "receiver": "356bc66d-449d-46e1-a9f7-1a0c05e87f7c"
+      },
+      {
+        "match": {
+          "alertname": "c9af765b-3c97-41f1-b597-512e233836d8"
+        },
+        "receiver": "356bc66d-449d-46e1-a9f7-1a0c05e87f7c"
+      },
+      {
+        "match": {
+          "alertname": "21cfac86-bdb2-4ccb-ae4f-3ceb371d558f"
+        },
+        "receiver": "8ac2605d-9e40-4df2-b1e8-de05cabc4c45"
+      }
+    ]
+  },
+  "receivers": [
+    {
+      "name": "default",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://localhost:8080"
+        }
+      ]
+    },
+    {
+      "name": "356bc66d-449d-46e1-a9f7-1a0c05e87f7c",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://localhost:8080"
+        }
+      ]
+    },
+    {
+      "name": "8ac2605d-9e40-4df2-b1e8-de05cabc4c45",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://localhost:8080"
+        }
+      ]
+    }
+  ]
+}

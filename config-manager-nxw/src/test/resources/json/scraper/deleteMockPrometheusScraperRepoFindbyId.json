@@ -1,0 +1,9 @@
+{
+  "scraperId": "26a7cf17-8c9f-4005-abf0-7c8631de0319",
+  "performanceMetric": "latency_ms",
+  "nsid": "fgt-f655e4d-1422-411f-bde5-df7a79277878",
+  "vnfid": "webserver",
+  "kafkaTopic": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175_scaling",
+  "interval": 1,
+  "expression": "{nsId=\"NS-fgt-f655e4d-1422-411f-bde5-df7a79277878\"}"
+}

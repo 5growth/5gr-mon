@@ -36,6 +36,9 @@ public class GrafanaDashboard {
     private List<Row> rows;
     private String timezone;
     private int schemaVersion;
+    private DashboardTime dashboardTime;
+    private String dashboardRefreshInterval;
+
 
     public GrafanaDashboard() {
 
@@ -158,5 +161,65 @@ public class GrafanaDashboard {
         this.schemaVersion = schemaversion;
         return this;
     }
+
+    @JsonProperty("time")
+    public DashboardTime getDashboardTime() {
+        return dashboardTime;
+    }
+
+    @JsonProperty("time")
+    public void setDashboardTime(DashboardTime dashboardTime) {
+        this.dashboardTime = dashboardTime;
+    }
+
+    public GrafanaDashboard time(DashboardTime dashboardTime) {
+        this.dashboardTime = dashboardTime;
+        return this;
+    }
+
+    @JsonProperty("refresh")
+    public String getDashboardRefreshInterval() {
+        return dashboardRefreshInterval;
+    }
+
+    @JsonProperty("refresh")
+    public void setDashboardRefreshInterval(String dashboardRefreshInterval) {
+        this.dashboardRefreshInterval = dashboardRefreshInterval;
+    }
+
+    public GrafanaDashboard dashboardRefreshInterval(String dashboardRefreshInterval) {
+        this.dashboardRefreshInterval = dashboardRefreshInterval;
+        return this;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GrafanaDashboard that = (GrafanaDashboard) o;
+
+        if (version != that.version) return false;
+        if (schemaVersion != that.schemaVersion) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (uid != null ? !uid.equals(that.uid) : that.uid != null) return false;
+        if (tags != null ? !tags.equals(that.tags) : that.tags != null) return false;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (rows != null ? rows.equals(that.rows) : that.rows != null) return false;
+        return timezone != null ? timezone.equals(that.timezone) : that.timezone == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + version;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (rows != null ? rows.hashCode() : 0);
+        result = 31 * result + (timezone != null ? timezone.hashCode() : 0);
+        result = 31 * result + schemaVersion;
+        return result;
+    }
+
 
 }

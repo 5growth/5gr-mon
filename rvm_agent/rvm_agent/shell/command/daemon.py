@@ -44,6 +44,11 @@ logging.basicConfig(level='INFO')
               .format(env.RVM_DAEMON_NAME),
               envvar=env.RVM_DAEMON_NAME,
               required=True)
+@click.option('identifier_mode', '--identifier_mode',
+              help='RVM agent identifier mode'
+              .format(env.IDENTIFIER_MODE),
+              required=True,
+              envvar=env.IDENTIFIER_MODE)
 @click.command()
 def create(**params):
     """

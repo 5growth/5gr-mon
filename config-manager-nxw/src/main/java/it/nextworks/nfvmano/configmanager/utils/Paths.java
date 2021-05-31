@@ -36,11 +36,6 @@ public class Paths {
 
         public static final String TOPIC = "/prom-manager/topic";
 
-        public static final String QUERY = "/prom-manager/query";
-
-        public static final String LOGIN = "/prom-manager/login";
-        public static final String LOGOUT = "/prom-manager/logout";
-
         public static final String AGENT  = "/prom-manager/agent";
         public static final String ONE_AGENT  = "/prom-manager/agent/:agentId";
         public static final String COMMAND  = "/prom-manager/agent_command";
@@ -51,9 +46,16 @@ public class Paths {
         public static final String DELETE_PROMETHEUS_COLLECTOR = "/prom-manager/del_prometheus_collector/:agentId/:prometheusCollectorId";
         public static final String GET_RESOURCES_SCRIPTS = "/resources/scripts/:scriptName";
         public static final String GET_RESOURCES_AGENTS = "/resources/agents/:agentName";
+        public static final String GET_RESOURCES_FILES = "/resources/files/*";
+
+        public static final String PUSH_GATEWAY_GET_METRICS = "/metrics/*";
 
         public static final String PROMETHEUS_SCRAPER  = "/prom-manager/prometheus_scraper";
         public static final String DELETE_PROMETHEUS_SCRAPER  = "/prom-manager/prometheus_scraper/:scraperId";
         public static final String KIBANA_DASHBOARD = "/prom-manager/kibanaDashboard";
+        public static final String ONE_KIBANA_DASHBOARD = "/prom-manager/kibanaDashboard/:dashId";
+        public static final String ELK_STACK_ALERT = "/prom-manager/elk/alert";
+        public static final String ONE_ELK_STACK_ALERT = "/prom-manager/elk/alert/:alertId";
+
     }
 }

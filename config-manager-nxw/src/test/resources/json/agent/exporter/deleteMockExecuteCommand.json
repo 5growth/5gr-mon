@@ -1,0 +1,25 @@
+{
+  "args": [],
+  "env": {},
+  "cwd": "/tmp",
+  "body": [
+    "#!/bin/bash",
+    "",
+    "sudo systemctl stop node_exporter",
+    "",
+    "sudo systemctl disable node_exporter",
+    "",
+    "rm -f /etc/sysconfig/node_exporter",
+    "",
+    "rm -f /etc/systemd/system/node_exporter.service",
+    "",
+    "sudo systemctl daemon-reload",
+    "",
+    "sudo userdel node_exporter",
+    "rm -f /usr/sbin/node_exporter"
+  ],
+  "agent_id": "vm_agent_1",
+  "command_id": 2,
+  "type_message": "bash_script",
+  "object_type": "command"
+}

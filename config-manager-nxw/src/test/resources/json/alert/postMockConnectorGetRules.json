@@ -1,0 +1,19 @@
+{
+  "groups": [
+    {
+      "rules": [
+        {
+          "annotations": {},
+          "expr": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0 > 0.0",
+          "alert": "cec35855-5220-4485-b635-c67b3ad68d87",
+          "labels": {
+            "severity": "warning",
+            "alertName": "alert1"
+          },
+          "for": "10s"
+        }
+      ],
+      "name": "X-ConfigManager"
+    }
+  ]
+}

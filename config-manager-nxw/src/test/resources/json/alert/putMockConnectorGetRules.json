@@ -1,0 +1,39 @@
+{
+  "groups": [
+    {
+      "rules": [
+        {
+          "annotations": {},
+          "expr": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0 > 0.0",
+          "alert": "30a4b5ce-e8e6-4c61-9e18-0be1d5d891bf",
+          "labels": {
+            "severity": "warning",
+            "alertName": "alert1"
+          },
+          "for": "10s"
+        },
+        {
+          "annotations": {},
+          "expr": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0 > 0.0",
+          "alert": "df582efd-3f18-4d0d-a2f5-6a9a0ad53eaa",
+          "labels": {
+            "severity": "warning",
+            "alertName": "alert1"
+          },
+          "for": "10s"
+        },
+        {
+          "annotations": {},
+          "expr": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0 > 0.0",
+          "alert": "f05c4c69-cedf-4fe5-810a-18acc9f20ca6",
+          "labels": {
+            "severity": "warning",
+            "alertName": "alert2"
+          },
+          "for": "10s"
+        }
+      ],
+      "name": "X-ConfigManager"
+    }
+  ]
+}

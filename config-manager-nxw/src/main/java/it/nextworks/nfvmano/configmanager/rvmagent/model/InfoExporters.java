@@ -4,13 +4,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.JSONObject;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 
 public class InfoExporters {
     private static InfoExporters instance;
@@ -22,15 +21,12 @@ public class InfoExporters {
                 = new TypeReference<HashMap<String, List<ExporterParameter>>>() {
         };
 
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(json_file);
 
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(json_file).getFile());
-        Object obj = null;
-        JSONObject jsonObject = null;
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            infoExporters = mapper.readValue(new FileReader(file), typeRef);
+            infoExporters = mapper.readValue(inputStream, typeRef);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (JsonParseException e) {

@@ -1,9 +1,10 @@
 package it.nextworks.nfvmano.configmanager.sb.kafkaRVMAgent.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.nextworks.nfvmano.configmanager.rvmagent.model.PrometheusLabel;
+import it.nextworks.nfvmano.configmanager.rvmagent.model.StructureKeyValue;
 
 import java.util.List;
+import java.util.Objects;
 
 public class KafkaAddPrometheusCollectorResponse extends KafkaGeneralResponse {
     @JsonProperty("collector_id")
@@ -19,12 +20,13 @@ public class KafkaAddPrometheusCollectorResponse extends KafkaGeneralResponse {
     @JsonProperty("prometheus_job")
     private String prometheusJob;
     private String interval;
-    private List<PrometheusLabel> labels;
+    private List<StructureKeyValue> labels;
+    private List<StructureKeyValue> params;
 
     public KafkaAddPrometheusCollectorResponse() {
     }
 
-    public KafkaAddPrometheusCollectorResponse(String rvmAgentId, String host, String prometheusTopic, String port, String nodeUrlSuffix, String prometheusJob, String interval, List<PrometheusLabel> labels) {
+    public KafkaAddPrometheusCollectorResponse(String rvmAgentId, String host, String prometheusTopic, String port, String nodeUrlSuffix, String prometheusJob, String interval, List<StructureKeyValue> labels) {
 
         this.rvmAgentId = rvmAgentId;
         this.host = host;
@@ -102,53 +104,27 @@ public class KafkaAddPrometheusCollectorResponse extends KafkaGeneralResponse {
         this.interval = interval;
     }
 
-    public List<PrometheusLabel> getLabels() {
+    public List<StructureKeyValue> getLabels() {
         return labels;
     }
 
-    public void setLabels(List<PrometheusLabel> labels) {
+    public void setLabels(List<StructureKeyValue> labels) {
         this.labels = labels;
     }
 
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        KafkaAddPrometheusCollectorResponse that = (KafkaAddPrometheusCollectorResponse) o;
-
-        if (rvmAgentId != null ? !rvmAgentId.equals(that.rvmAgentId) : that.rvmAgentId != null) return false;
-        if (host != null ? !host.equals(that.host) : that.host != null) return false;
-        if (prometheusTopic != null ? !prometheusTopic.equals(that.prometheusTopic) : that.prometheusTopic != null)
-            return false;
-        if (port != null ? !port.equals(that.port) : that.port != null) return false;
-        if (nodeUrlSuffix != null ? !nodeUrlSuffix.equals(that.nodeUrlSuffix) : that.nodeUrlSuffix != null)
-            return false;
-        if (prometheusJob != null ? !prometheusJob.equals(that.prometheusJob) : that.prometheusJob != null)
-            return false;
-        if (interval != null ? !interval.equals(that.interval) : that.interval != null) return false;
-        return labels != null ? labels.equals(that.labels) : that.labels == null;
+    public List<StructureKeyValue> getParams() {
+        return params;
     }
 
-    @Override
-    public int hashCode() {
-        int result = rvmAgentId != null ? rvmAgentId.hashCode() : 0;
-        result = 31 * result + (host != null ? host.hashCode() : 0);
-        result = 31 * result + (prometheusTopic != null ? prometheusTopic.hashCode() : 0);
-        result = 31 * result + (port != null ? port.hashCode() : 0);
-        result = 31 * result + (nodeUrlSuffix != null ? nodeUrlSuffix.hashCode() : 0);
-        result = 31 * result + (prometheusJob != null ? prometheusJob.hashCode() : 0);
-        result = 31 * result + (interval != null ? interval.hashCode() : 0);
-        result = 31 * result + (labels != null ? labels.hashCode() : 0);
-        return result;
+    public void setParams(List<StructureKeyValue> params) {
+        this.params = params;
     }
 
     @Override
     public String toString() {
-        return "AddPrometheusCollectorResponse{" +
-                "rvmAgentId='" + rvmAgentId + '\'' +
+        return "KafkaAddPrometheusCollectorResponse{" +
+                "collectorId='" + collectorId + '\'' +
+                ", rvmAgentId='" + rvmAgentId + '\'' +
                 ", host='" + host + '\'' +
                 ", prometheusTopic='" + prometheusTopic + '\'' +
                 ", port='" + port + '\'' +
@@ -156,6 +132,30 @@ public class KafkaAddPrometheusCollectorResponse extends KafkaGeneralResponse {
                 ", prometheusJob='" + prometheusJob + '\'' +
                 ", interval='" + interval + '\'' +
                 ", labels=" + labels +
+                ", params=" + params +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KafkaAddPrometheusCollectorResponse that = (KafkaAddPrometheusCollectorResponse) o;
+        return Objects.equals(collectorId, that.collectorId) &&
+                Objects.equals(rvmAgentId, that.rvmAgentId) &&
+                Objects.equals(host, that.host) &&
+                Objects.equals(prometheusTopic, that.prometheusTopic) &&
+                Objects.equals(port, that.port) &&
+                Objects.equals(nodeUrlSuffix, that.nodeUrlSuffix) &&
+                Objects.equals(prometheusJob, that.prometheusJob) &&
+                Objects.equals(interval, that.interval) &&
+                Objects.equals(labels, that.labels) &&
+                Objects.equals(params, that.params);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(collectorId, rvmAgentId, host, prometheusTopic, port, nodeUrlSuffix, prometheusJob, interval, labels, params);
+    }
+
 }

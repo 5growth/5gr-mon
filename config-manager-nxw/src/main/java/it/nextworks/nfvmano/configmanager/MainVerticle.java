@@ -16,7 +16,6 @@
 
 package it.nextworks.nfvmano.configmanager;
 
-import com.telcaria.kibana.dashboards.model.KibanaDashboardDescription;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
@@ -34,52 +33,45 @@ import it.nextworks.nfvmano.configmanager.common.ErrorResponse;
 import it.nextworks.nfvmano.configmanager.dashboards.DashboardController;
 import it.nextworks.nfvmano.configmanager.dashboards.DashboardRepo;
 import it.nextworks.nfvmano.configmanager.dashboards.MemoryDashboardRepo;
-import it.nextworks.nfvmano.configmanager.dashboards.kibana.KibanaDashboardController;
-import it.nextworks.nfvmano.configmanager.dashboards.kibana.KibanaDashboardRepo;
-import it.nextworks.nfvmano.configmanager.dashboards.kibana.MemoryKibanaDashboardRepo;
 import it.nextworks.nfvmano.configmanager.dashboards.model.Dashboard;
 import it.nextworks.nfvmano.configmanager.dashboards.model.DashboardDescription;
+import it.nextworks.nfvmano.configmanager.elkstack.*;
+import it.nextworks.nfvmano.configmanager.elkstack.model.ELKAlertDescription;
+import it.nextworks.nfvmano.configmanager.elkstack.model.ELKDashboardDescription;
 import it.nextworks.nfvmano.configmanager.exporters.ExporterController;
 import it.nextworks.nfvmano.configmanager.exporters.ExporterRepo;
 import it.nextworks.nfvmano.configmanager.exporters.MemoryExporterRepo;
 import it.nextworks.nfvmano.configmanager.exporters.model.Exporter;
 import it.nextworks.nfvmano.configmanager.exporters.model.ExporterDescription;
 import it.nextworks.nfvmano.configmanager.prometheusMQAgent.PrometheusMQAgent;
+import it.nextworks.nfvmano.configmanager.prometheusPushGateway.PrometheusPushGatewayController;
 import it.nextworks.nfvmano.configmanager.prometheusScraper.MemoryPrometheusScraperRepo;
 import it.nextworks.nfvmano.configmanager.prometheusScraper.PrometheusScraperController;
 import it.nextworks.nfvmano.configmanager.prometheusScraper.PrometheusScraperRepo;
-import it.nextworks.nfvmano.configmanager.prometheusScraper.model.PrometheusScraper;
 import it.nextworks.nfvmano.configmanager.rvmagent.MemoryRVMAgentRepo;
-import it.nextworks.nfvmano.configmanager.rvmagent.MongoDBRVMAgentRepo;
 import it.nextworks.nfvmano.configmanager.rvmagent.RVMAgentController;
 import it.nextworks.nfvmano.configmanager.rvmagent.RVMAgentRepo;
 import it.nextworks.nfvmano.configmanager.sb.PrometheusScraper.PrometheusScraperConnector;
 import it.nextworks.nfvmano.configmanager.sb.PrometheusScraper.PrometheusScraperService;
+import it.nextworks.nfvmano.configmanager.sb.elkstack.ELKAlertService;
+import it.nextworks.nfvmano.configmanager.sb.elkstack.ELKDashboardService;
+import it.nextworks.nfvmano.configmanager.sb.elkstack.ELKStackConnector;
 import it.nextworks.nfvmano.configmanager.sb.grafana.GrafanaConnector;
 import it.nextworks.nfvmano.configmanager.sb.grafana.GrafanaDashboardService;
-import it.nextworks.nfvmano.configmanager.sb.kibana.KibanaConnector;
-import it.nextworks.nfvmano.configmanager.sb.kibana.KibanaDashboardService;
-import it.nextworks.nfvmano.configmanager.sb.logstash.LogstashConnector;
-import it.nextworks.nfvmano.configmanager.sb.logstash.TopicService;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.AlertService;
 import it.nextworks.nfvmano.configmanager.sb.kafkaRVMAgent.RVMAgentConnector;
 import it.nextworks.nfvmano.configmanager.sb.kafkaRVMAgent.RVMAgentService;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.AlertService;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.ExporterService;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.MemoryTargetRepo;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.PrometheusConnector;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.TargetRepo;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.TargetRepo;
+import it.nextworks.nfvmano.configmanager.sb.logstash.LogstashConnector;
+import it.nextworks.nfvmano.configmanager.sb.logstash.TopicService;
+import it.nextworks.nfvmano.configmanager.sb.prometheus.*;
+import it.nextworks.nfvmano.configmanager.sb.prometheusPushGateway.PrometheusPushGatewayService;
+import it.nextworks.nfvmano.configmanager.sb.prometheusPushGateway.model.MetricsObject;
 import it.nextworks.nfvmano.configmanager.topics.MemoryTopicRepo;
 import it.nextworks.nfvmano.configmanager.topics.TopicController;
 import it.nextworks.nfvmano.configmanager.topics.TopicRepo;
 import it.nextworks.nfvmano.configmanager.topics.model.Topic;
 import it.nextworks.nfvmano.configmanager.utils.ConfigReader;
 import it.nextworks.nfvmano.configmanager.utils.Paths;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.slf4j.Logger;
@@ -110,6 +102,7 @@ public class MainVerticle extends AbstractVerticle {
 
 
 
+
     private static Route producing(Route route) {
         for (String type : AVAILABLE_TYPES) {
             route.produces(type);
@@ -118,7 +111,8 @@ public class MainVerticle extends AbstractVerticle {
     }
 
     // Instance members
-    private int port;
+    static public int port;
+    static public String ip;
 
     private String promConfigPath;
     private String promAlertRulesPath;
@@ -134,33 +128,52 @@ public class MainVerticle extends AbstractVerticle {
 
     private ExporterController exporterController;
     private DashboardController dashboardController;
+    private ELKDashboardController elkDashboardController;
+    private ELKAlertController elkAlertController;
+
     private AlertsController alertsController;
     private RVMAgentController rvmAgentController;
     private PrometheusScraperController prometheusScraperController;
-
-    private String promHost;
-    private int promPort;
+    private PrometheusPushGatewayController prometheusPushGatewayController;
+    public static String promHost;
+    public static int promPort;
     private String amHost;
     private int amPort;
     private TopicController topicController;
-    private KibanaDashboardController kibanaDashboardController;
+
+    private String elkStackHost;
+    private int elkStackPort;
 
 
     private PrometheusConnector promConnector;
+    private GrafanaConnector gConnector;
+    private ELKStackConnector elkStackConnector;
     private RVMAgentConnector rvmAgentConnector;
     private PrometheusScraperConnector prometheusScraperConnector;
     private ConfigReader config;
 
-    private String kafka_bootstrap_servers;
-    private ConcurrentHashMap<String, HashMap<String, String>> concurrentHashMap = new ConcurrentHashMap<String, HashMap<String, String>>();;
+    public static String kafka_bootstrap_server;
+
+    protected ConcurrentHashMap<String, HashMap<String, String>> scraperHashMap = new ConcurrentHashMap<String, HashMap<String, String>>();
+    private ConcurrentHashMap<Map<String, String>, MetricsObject> pushGatewayMemory = new ConcurrentHashMap<>();
     private String kibanaHost;
     private int kibanaPort;
     private LogstashConnector logstashConnector;
+    private String rvmagentIdentifierMode;
+    private ExporterRepo exporterRepo;
+    private DashboardRepo dashboardRepo;
+    private ELKDashboardRepo elkDashboardRepo;
+    private ELKAlertRepo elkAlertRepo;
+    private MemoryAlertRepo alertRepo;
+    private MemoryTargetRepo targetRepo;
+    private PrometheusScraperRepo prometheusScraperRepo;
+    private RVMAgentRepo rvmAgentRepo;
 
     private void readConfig() {
         this.config = new ConfigReader();
 
         port = config.getIntProperty("server.port");
+        ip = config.getProperty("server.ip");
 
         promConfigPath = config.getProperty("prometheus.config");
         promAlertRulesPath = config.getProperty("prometheus.alertRules");
@@ -178,10 +191,12 @@ public class MainVerticle extends AbstractVerticle {
         amHost = config.getProperty("alertmanager.host");
         amPort = config.getIntProperty("alertmanager.port");
 
-        kafka_bootstrap_servers = this.config.getProperty("kafka.bootstrap.servers");
+        kafka_bootstrap_server = this.config.getProperty("kafka.bootstrap.server");
 
-        kibanaHost = config.getProperty("kibana.host");
-        kibanaPort = config.getIntProperty("kibana.port");
+        rvmagentIdentifierMode = config.getProperty("rvmagent.identifiermode");
+
+        elkStackHost = config.getProperty("elkstack.host");
+        elkStackPort = config.getIntProperty("elkstack.port");
 
         String logLevel = config.getProperty("logging.level");
 
@@ -192,7 +207,7 @@ public class MainVerticle extends AbstractVerticle {
         }
     }
 
-    private PrometheusConnector makePrometheusConnector() {
+    PrometheusConnector makePrometheusConnector() {
         WebClient webClient = WebClient.create(vertx);
         if (promConnector == null) {
             promConnector = new PrometheusConnector(
@@ -210,23 +225,59 @@ public class MainVerticle extends AbstractVerticle {
         return promConnector;
     }
 
+    GrafanaConnector makeGrafanaConnector() {
+        if (gConnector == null) {
+            WebClient webClient = WebClient.create(
+                    vertx,
+                    new WebClientOptions()
+                            .setDefaultHost(grafanaHost)
+                            .setDefaultPort(grafanaPort)
+            );
+            String grafanaBaseUrl = "http://" + grafanaHost + ":" + grafanaPort;
+            gConnector = new GrafanaConnector(webClient, grafanaToken, grafanaBaseUrl, reportFullUrl);
+        }
+        return gConnector;
+    }
+
+    ELKStackConnector makeELKStackConnector() {
+        if (elkStackConnector == null) {
+            WebClient webClient = WebClient.create(
+                    vertx,
+                    new WebClientOptions()
+                            .setDefaultHost(elkStackHost)
+                            .setDefaultPort(elkStackPort)
+            );
+            String elkStackUrl = "http://" + elkStackHost + ":" + elkStackPort;
+            elkStackConnector = new ELKStackConnector(webClient, elkStackUrl);
+        }
+        return elkStackConnector;
+    }
+
     private RVMAgentConnector makeRVMAgentConnector() {
         if (rvmAgentConnector == null) {
-            rvmAgentConnector = new RVMAgentConnector(kafka_bootstrap_servers
+            rvmAgentConnector = new RVMAgentConnector(kafka_bootstrap_server,
+                    rvmagentIdentifierMode
             );
         }
         return rvmAgentConnector;
     }
 
-    private PrometheusScraperConnector makePrometheusScraperConnector() {
+    public PrometheusScraperConnector makePrometheusScraperConnector() {
         if (prometheusScraperConnector == null) {
-            prometheusScraperConnector = new PrometheusScraperConnector (kafka_bootstrap_servers);
+            prometheusScraperConnector = new PrometheusScraperConnector(kafka_bootstrap_server);
         }
         return prometheusScraperConnector;
     }
 
+    public PrometheusScraperRepo makePrometheusScraperRepo() {
+        if (prometheusScraperRepo == null) {
+            prometheusScraperRepo = new MemoryPrometheusScraperRepo();
+        }
+        return prometheusScraperRepo;
+    }
+
     private LogstashConnector makeLogstashConnector() {
-        if(logstashConnector == null) {
+        if (logstashConnector == null) {
             logstashConnector = new LogstashConnector(
                     logstashConfigPath
             );
@@ -234,70 +285,118 @@ public class MainVerticle extends AbstractVerticle {
         return logstashConnector;
     }
 
+    public ExporterRepo makeMemoryExporterRepo() {
+
+        if (this.exporterRepo == null) {
+            exporterRepo = new MemoryExporterRepo();
+        }
+        return exporterRepo;
+    }
+
+    DashboardRepo makeMemoryDashboardRepo() {
+        if (this.dashboardRepo == null) {
+            dashboardRepo = new MemoryDashboardRepo();
+        }
+        return dashboardRepo;
+    }
+
+    ELKDashboardRepo makeMemoryELKStackRepo() {
+        if (this.elkDashboardRepo == null) {
+            elkDashboardRepo = new MemoryELKDashboardRepo();
+        }
+        return elkDashboardRepo;
+    }
+
+    ELKAlertRepo makeMemoryELKAlertRepo() {
+        if (this.elkAlertRepo == null) {
+            elkAlertRepo = new MemoryELKAlertRepo();
+        }
+        return elkAlertRepo;
+    }
+
+
+    AlertRepo makeAlertRepo() {
+        if (this.alertRepo == null) {
+            alertRepo = new MemoryAlertRepo();
+        }
+        return alertRepo;
+    }
+
+    TargetRepo makeTargetRepo() {
+        if (this.targetRepo == null) {
+            targetRepo = new MemoryTargetRepo();
+        }
+        return targetRepo;
+    }
+
+    RVMAgentRepo makeRVMAgentRepo() {
+        if (this.rvmAgentRepo == null) {
+            rvmAgentRepo = new MemoryRVMAgentRepo();
+        }
+        return rvmAgentRepo;
+    }
+
 
     private void makeExporterController() {
         PrometheusConnector pConnector = makePrometheusConnector();
-        ExporterRepo exporterRepo = new MemoryExporterRepo(); // TODO make persistent expRepo?
+        ExporterRepo exporterRepo = makeMemoryExporterRepo(); // TODO make persistent expRepo?
         ExporterService exporterService = new ExporterService(pConnector, exporterRepo);
         exporterController = new ExporterController(exporterService);
     }
 
     private void makeDashboardController() {
-        DashboardRepo dashboardRepo = new MemoryDashboardRepo();  // TODO make persistent dash repo?
-        WebClient webClient = WebClient.create(
-                vertx,
-                new WebClientOptions()
-                        .setDefaultHost(grafanaHost)
-                        .setDefaultPort(grafanaPort)
-        );
-        String grafanaBaseUrl = "http://" + grafanaHost + ":" + grafanaPort;
-        GrafanaConnector gConnector = new GrafanaConnector(webClient, grafanaToken, grafanaBaseUrl, reportFullUrl);
-        GrafanaDashboardService service = new GrafanaDashboardService(gConnector, dashboardRepo);
+        GrafanaConnector grafanaConnector = makeGrafanaConnector();
+        DashboardRepo dashboardRepo = makeMemoryDashboardRepo();  // TODO make persistent dash repo?
+        GrafanaDashboardService service = new GrafanaDashboardService(grafanaConnector, dashboardRepo);
         dashboardController = new DashboardController(service);
     }
 
-    private void makeRVMAgentController() {
-        RVMAgentConnector rvmConnector = makeRVMAgentConnector();
-        RVMAgentRepo rvmAgentRepo  = new MemoryRVMAgentRepo();
-        RVMAgentService rvmAgentService = new RVMAgentService(rvmConnector, rvmAgentRepo);
-        rvmAgentController= new RVMAgentController(rvmAgentService);
+    private void makeELKStackControllers() {
+        ELKStackConnector elkStackConnector = makeELKStackConnector();
+        ELKDashboardRepo elkDashboardRepo = makeMemoryELKStackRepo();
+        ELKAlertRepo elkAlertRepo = makeMemoryELKAlertRepo();
+        ELKDashboardService elkDashboardService = new ELKDashboardService(elkStackConnector, elkDashboardRepo);
+        ELKAlertService elkAlertService = new ELKAlertService(elkStackConnector, elkAlertRepo);
+        elkDashboardController = new ELKDashboardController(elkDashboardService);
+        elkAlertController = new ELKAlertController(elkAlertService);
     }
 
-    private void makePrometheusScraperController() {
+
+    private void makeRVMAgentController() {
+        RVMAgentConnector rvmConnector = makeRVMAgentConnector();
+        RVMAgentRepo rvmAgentRepo = makeRVMAgentRepo();
+        RVMAgentService rvmAgentService = new RVMAgentService(rvmConnector, rvmAgentRepo, kafka_bootstrap_server);
+        rvmAgentController = new RVMAgentController(rvmAgentService);
+    }
+
+    void makePrometheusScraperController() {
         PrometheusConnector pConnector = makePrometheusConnector();
+        KafkaProducer kafkaProducerForScraper = makekafkaProducerForScraper();
+        WebClient webClient = WebClient.create(vertx);
+        PrometheusScraperConnector prometheusScraperConnector = makePrometheusScraperConnector();
+        prometheusScraperRepo = makePrometheusScraperRepo();
+        PrometheusScraperService PrometheusScraperService = new PrometheusScraperService(prometheusScraperConnector,
+                prometheusScraperRepo, getScraperHashMap(), kafkaProducerForScraper, webClient, pConnector, promHost, promPort);
+        setPrometheusScraperController(new PrometheusScraperController(PrometheusScraperService));
+    }
+
+    KafkaProducer makekafkaProducerForScraper() {
         Properties configProducer = new Properties();
-        configProducer.put("bootstrap.servers", kafka_bootstrap_servers);
+        configProducer.put("bootstrap.servers", kafka_bootstrap_server);
         configProducer.put("acks", "all");
         configProducer.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         configProducer.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         configProducer.put("client.id", "ClientForScreper");
         KafkaProducer kafkaProducerForScraper = new KafkaProducer<String, String>(configProducer);
-        WebClient webClient = WebClient.create(vertx);
-        PrometheusScraperConnector prometheusScraperConnector = makePrometheusScraperConnector();
-        PrometheusScraperRepo prometheusScraperRepo  = new MemoryPrometheusScraperRepo();
-        PrometheusScraperService PrometheusScraperService = new PrometheusScraperService(prometheusScraperConnector,
-                prometheusScraperRepo, concurrentHashMap, kafkaProducerForScraper, webClient, pConnector, promHost, promPort);
-        prometheusScraperController= new PrometheusScraperController(PrometheusScraperService);
+        return kafkaProducerForScraper;
     }
 
 
-    private void makeKibanaDashboardController() {
-        KibanaDashboardRepo dashboardRepo = new MemoryKibanaDashboardRepo();  // TODO make persistent dash repo?
-        WebClient webClient = WebClient.create(
-                vertx,
-                new WebClientOptions()
-                        .setDefaultHost(kibanaHost)
-                        .setDefaultPort(kibanaPort)
-        );
-        KibanaConnector kConnector = new KibanaConnector(webClient);
-        KibanaDashboardService service = new KibanaDashboardService(kConnector, dashboardRepo);
-        kibanaDashboardController = new KibanaDashboardController(service);
-    }
 
     private void makeAlertsController() {
         PrometheusConnector pConnector = makePrometheusConnector();
-        AlertRepo alertRepo = new MemoryAlertRepo(); // TODO make persistent repo?
-        TargetRepo targetRepo = new MemoryTargetRepo();
+        AlertRepo alertRepo = makeAlertRepo(); // TODO make persistent repo?
+        TargetRepo targetRepo = makeTargetRepo();
         AlertService alertService = new AlertService(pConnector, alertRepo, targetRepo);
         alertsController = new AlertsController(alertService);
     }
@@ -312,11 +411,11 @@ public class MainVerticle extends AbstractVerticle {
     private void makeControllers() {
         makeExporterController();
         makeDashboardController();
+        makeELKStackControllers();
         makeAlertsController();
         makeRVMAgentController();
         makePrometheusScraperController();
         makeTopicController();
-        makeKibanaDashboardController();
     }
 
     private void makeExporterRoutes(Router router) {
@@ -364,15 +463,6 @@ public class MainVerticle extends AbstractVerticle {
     }
 
 
-    private void makeKibanaDashboardRoutes(Router router) {
-
-        if (kibanaDashboardController == null) {
-            throw new IllegalStateException("Initialization incomplete, missing kibana dashboard controller");
-        }
-
-        producing(router.post(Paths.Rest.KIBANA_DASHBOARD))
-                .handler(makeParsingHandler(kibanaDashboardController::postDashboard, KibanaDashboardDescription.class));
-    }
 
 
     private void makeTopicRoutes(Router router) {
@@ -403,6 +493,22 @@ public class MainVerticle extends AbstractVerticle {
 
     }
 
+    private void makeELKStackRouters(Router router){
+        if (elkDashboardController == null) {
+            throw new IllegalStateException("Initialization incomplete, missing ELK stack controller");
+        }
+        producing(router.post(Paths.Rest.KIBANA_DASHBOARD))
+                .handler(makeParsingHandler(elkDashboardController::postDashboard, ELKDashboardDescription.class));
+        producing(router.delete(Paths.Rest.ONE_KIBANA_DASHBOARD))
+                .handler(elkDashboardController::deleteDashboard);
+        producing(router.post(Paths.Rest.ELK_STACK_ALERT))
+                .handler(makeParsingHandler(elkAlertController::postAlert, ELKAlertDescription.class));
+        producing(router.delete(Paths.Rest.ONE_ELK_STACK_ALERT))
+                .handler(elkAlertController::deleteAlert);
+
+    }
+
+
     private void makeRVMAgentRoutes(Router router) {
         if (rvmAgentController == null) {
             throw new IllegalStateException("Initialization incomplete, missing RVMAgent controller");
@@ -420,6 +526,8 @@ public class MainVerticle extends AbstractVerticle {
         rvmAgentController.deletePrometheusCollector(producing(router.delete(Paths.Rest.DELETE_PROMETHEUS_COLLECTOR)));
         rvmAgentController.getScripts(producing(router.get(Paths.Rest.GET_RESOURCES_SCRIPTS)));
         rvmAgentController.getAgents(producing(router.get(Paths.Rest.GET_RESOURCES_AGENTS)));
+        rvmAgentController.getFiles(producing(router.get(Paths.Rest.GET_RESOURCES_FILES)));
+
     }
 
     private void makePrometheusScrapeRoutes(Router router) {
@@ -431,7 +539,15 @@ public class MainVerticle extends AbstractVerticle {
     }
 
 
-    private void startPrometheusMQAgent() {
+    void startPrometheusMQAgentAndPushGatewayController(Router router) {
+
+        PrometheusPushGatewayService prometheusPushGatewayService = new PrometheusPushGatewayService(pushGatewayMemory);
+        prometheusPushGatewayController = new PrometheusPushGatewayController(prometheusPushGatewayService);
+
+        if (prometheusPushGatewayController == null) {
+            throw new IllegalStateException("Initialization incomplete, missing PrometheusScrape controller");
+        }
+        prometheusPushGatewayController.getPrometheusMetrics(producing(router.get(Paths.Rest.PUSH_GATEWAY_GET_METRICS)));
 
         Properties configPrometheusMQAgent = new Properties();
         configPrometheusMQAgent.put("client.id", "PrometheusMQAgent");
@@ -439,16 +555,14 @@ public class MainVerticle extends AbstractVerticle {
         configPrometheusMQAgent.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         configPrometheusMQAgent.put("enable.auto.commit", "true");
         configPrometheusMQAgent.put("group.id", this.config.getProperty("prometheus.PushGateway.group.id"));
-        configPrometheusMQAgent.put("bootstrap.servers", this.config.getProperty("kafka.bootstrap.servers"));
-        configPrometheusMQAgent.put("prometheus.PushGatewayAddress", this.config.getProperty("prometheus.PushGatewayAddress"));
-        configPrometheusMQAgent.put("prometheus.PushGatewayPort", this.config.getProperty("prometheus.PushGatewayPort"));
+        configPrometheusMQAgent.put("bootstrap.servers", this.config.getProperty("kafka.bootstrap.server"));
         configPrometheusMQAgent.put("prometheus.PushGateway.topic", this.config.getProperty("prometheus.PushGateway.topic"));
-        PrometheusMQAgent prometheusMQAgent = new PrometheusMQAgent(configPrometheusMQAgent, vertx, concurrentHashMap);
+        PrometheusMQAgent prometheusMQAgent = new PrometheusMQAgent(configPrometheusMQAgent, vertx, getScraperHashMap(), pushGatewayMemory);
         prometheusMQAgent.start();
 
+
+
     }
-
-
 
     private void handleFailure(RoutingContext ctx) {
         Throwable error = ctx.failure();
@@ -483,23 +597,41 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public void start() {
         readConfig();
-        startPrometheusMQAgent();
+
         makePrometheusConnector();
 
         makeControllers();
         Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create()).failureHandler(this::handleFailure);
+        startPrometheusMQAgentAndPushGatewayController(router);
         makeExporterRoutes(router);
         makeDashboardRoutes(router);
         makeAlertRoutes(router);
         makeRVMAgentRoutes(router);
         makePrometheusScrapeRoutes(router);
+        makeELKStackRouters(router);
         vertx.createHttpServer().requestHandler(router::accept).listen(port);
     }
 
+    public PrometheusScraperController getPrometheusScraperController() {
+        return prometheusScraperController;
+    }
+
+    public void setPrometheusScraperController(PrometheusScraperController prometheusScraperController) {
+        this.prometheusScraperController = prometheusScraperController;
+    }
+
+    public ConcurrentHashMap<String, HashMap<String, String>> getScraperHashMap() {
+        return scraperHashMap;
+    }
+
+    public void setScraperHashMap(ConcurrentHashMap<String, HashMap<String, String>> scraperHashMap) {
+        this.scraperHashMap = scraperHashMap;
+    }
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
         vertx.deployVerticle(MainVerticle.class.getName());
     }
+
 }

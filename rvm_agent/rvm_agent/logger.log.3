@@ -1,0 +1,348 @@
+2020-07-07 17:34:12,710 INFO worker.py Class: RVM_agent check_messages 
+{
+    "args": [],
+    "env": {},
+    "cwd": "/tmp",
+    "body": [
+        "#!/bin/bash",
+        "",
+        "STATUS=\"$(systemctl is-active onewaylatency_exporter.service)\"",
+        "if [ \"${STATUS}\" = \"active\" ]; then",
+        "    echo \" Service onewaylatency_exporter.service running.... so exiting \"",
+        "    exit 1",
+        "fi",
+        "",
+        "mkdir -p /opt/onewaylatency_exporter",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/exporter_one_way_latency.py -O /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/requirements.txt -O /opt/onewaylatency_exporter/requirements.txt",
+        "pip3 install -r /opt/onewaylatency_exporter/requirements.txt",
+        "",
+        "cat << EOF > /etc/systemd/system/onewaylatency_exporter.service",
+        "[Unit]",
+        "Description=onewaylatency_exporter",
+        "",
+        "[Service]",
+        "Type=simple",
+        "WorkingDirectory=/opt/onewaylatency_exporter",
+        "ExecStart=/usr/bin/python3 /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "Restart=on-failure",
+        "[Install]",
+        "WantedBy=multi-user.target",
+        "EOF",
+        "",
+        "sudo systemctl daemon-reload",
+        "",
+        "sudo systemctl enable onewaylatency_exporter",
+        "",
+        "sudo systemctl start onewaylatency_exporter"
+    ],
+    "agent_id": "vm_agent_1",
+    "command_id": 3,
+    "type_message": "bash_script",
+    "object_type": "command"
+}
+2020-07-07 17:34:12,746 INFO worker.py Class: RVM_agent execute_command outs message:  Service onewaylatency_exporter.service running.... so exiting 
+
+2020-07-07 17:34:12,746 INFO worker.py Class: RVM_agent execute_command errs message: 
+2020-07-07 17:34:12,747 INFO worker.py Class: RVM_agent execute_command returncode message: 1
+2020-07-07 17:34:12,747 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:34:12,748 INFO worker.py Class: RVM_agent check_messages 
+{
+    "returncode": 1,
+    "outs": " Service onewaylatency_exporter.service running.... so exiting \n",
+    "errs": "",
+    "agent_id": "vm_agent_1",
+    "command_id": 3,
+    "object_type": "command_response"
+}
+2020-07-07 17:34:12,749 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:34:12,810 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:34:24,779 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:34:24,782 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "add_prometheus_collector"
+}
+2020-07-07 17:34:24,854 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:34:24,857 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "added_prometheus_collector"
+}
+2020-07-07 17:34:24,861 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:34:24,899 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:34:24,900 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:34:24,901 INFO worker.py Class: RVM_agent check_messages 
+{
+    "args": [],
+    "env": {},
+    "cwd": "/tmp",
+    "body": [
+        "#!/bin/bash",
+        "",
+        "STATUS=\"$(systemctl is-active onewaylatency_exporter.service)\"",
+        "if [ \"${STATUS}\" = \"active\" ]; then",
+        "    echo \" Service onewaylatency_exporter.service running.... so exiting \"",
+        "    exit 1",
+        "fi",
+        "",
+        "mkdir -p /opt/onewaylatency_exporter",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/exporter_one_way_latency.py -O /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/requirements.txt -O /opt/onewaylatency_exporter/requirements.txt",
+        "pip3 install -r /opt/onewaylatency_exporter/requirements.txt",
+        "",
+        "cat << EOF > /etc/systemd/system/onewaylatency_exporter.service",
+        "[Unit]",
+        "Description=onewaylatency_exporter",
+        "",
+        "[Service]",
+        "Type=simple",
+        "WorkingDirectory=/opt/onewaylatency_exporter",
+        "ExecStart=/usr/bin/python3 /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "Restart=on-failure",
+        "[Install]",
+        "WantedBy=multi-user.target",
+        "EOF",
+        "",
+        "sudo systemctl daemon-reload",
+        "",
+        "sudo systemctl enable onewaylatency_exporter",
+        "",
+        "sudo systemctl start onewaylatency_exporter"
+    ],
+    "agent_id": "vm_agent_1",
+    "command_id": 4,
+    "type_message": "bash_script",
+    "object_type": "command"
+}
+2020-07-07 17:34:25,073 INFO worker.py Class: RVM_agent execute_command outs message:  Service onewaylatency_exporter.service running.... so exiting 
+
+2020-07-07 17:34:25,074 INFO worker.py Class: RVM_agent execute_command errs message: 
+2020-07-07 17:34:25,074 INFO worker.py Class: RVM_agent execute_command returncode message: 1
+2020-07-07 17:34:25,075 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:34:25,076 INFO worker.py Class: RVM_agent check_messages 
+{
+    "returncode": 1,
+    "outs": " Service onewaylatency_exporter.service running.... so exiting \n",
+    "errs": "",
+    "agent_id": "vm_agent_1",
+    "command_id": 4,
+    "object_type": "command_response"
+}
+2020-07-07 17:34:25,076 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:34:25,145 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:35:20,968 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:35:20,972 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "add_prometheus_collector"
+}
+2020-07-07 17:35:20,989 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:35:21,018 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "added_prometheus_collector"
+}
+2020-07-07 17:35:21,021 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:35:21,060 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:35:21,170 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:35:21,174 INFO worker.py Class: RVM_agent check_messages 
+{
+    "args": [],
+    "env": {},
+    "cwd": "/tmp",
+    "body": [
+        "#!/bin/bash",
+        "",
+        "STATUS=\"$(systemctl is-active onewaylatency_exporter.service)\"",
+        "if [ \"${STATUS}\" = \"active\" ]; then",
+        "    echo \" Service onewaylatency_exporter.service running.... so exiting \"",
+        "    exit 1",
+        "fi",
+        "",
+        "mkdir -p /opt/onewaylatency_exporter",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/exporter_one_way_latency.py -O /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/requirements.txt -O /opt/onewaylatency_exporter/requirements.txt",
+        "pip3 install -r /opt/onewaylatency_exporter/requirements.txt",
+        "",
+        "cat << EOF > /etc/systemd/system/onewaylatency_exporter.service",
+        "[Unit]",
+        "Description=onewaylatency_exporter",
+        "",
+        "[Service]",
+        "Type=simple",
+        "WorkingDirectory=/opt/onewaylatency_exporter",
+        "ExecStart=/usr/bin/python3 /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "Restart=on-failure",
+        "[Install]",
+        "WantedBy=multi-user.target",
+        "EOF",
+        "",
+        "sudo systemctl daemon-reload",
+        "",
+        "sudo systemctl enable onewaylatency_exporter",
+        "",
+        "sudo systemctl start onewaylatency_exporter"
+    ],
+    "agent_id": "vm_agent_1",
+    "command_id": 5,
+    "type_message": "bash_script",
+    "object_type": "command"
+}
+2020-07-07 17:35:21,283 INFO worker.py Class: RVM_agent execute_command outs message:  Service onewaylatency_exporter.service running.... so exiting 
+
+2020-07-07 17:35:21,284 INFO worker.py Class: RVM_agent execute_command errs message: 
+2020-07-07 17:35:21,285 INFO worker.py Class: RVM_agent execute_command returncode message: 1
+2020-07-07 17:35:21,285 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:35:21,292 INFO worker.py Class: RVM_agent check_messages 
+{
+    "returncode": 1,
+    "outs": " Service onewaylatency_exporter.service running.... so exiting \n",
+    "errs": "",
+    "agent_id": "vm_agent_1",
+    "command_id": 5,
+    "object_type": "command_response"
+}
+2020-07-07 17:35:21,293 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:35:21,334 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:37:08,870 WARNING worker.py Class: RVM_agent check_messages Consumer error: KafkaError{code=_TRANSPORT,val=-195,str="FindCoordinator response error: Local: Broker transport failure"}

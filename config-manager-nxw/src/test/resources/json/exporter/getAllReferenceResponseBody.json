@@ -1,0 +1,44 @@
+{
+  "exporter": [
+    {
+      "exporter": "blackbox_exporter",
+      "exporterId": "96cffb48-30e0-4ce1-a333-410304778833",
+      "name": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+      "endpoint": [
+        {
+          "address": "192.168.100.1",
+          "port": 8989
+        }
+      ],
+      "collectionPeriod": 15,
+      "nsId": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175",
+      "vnfdId": "spr2",
+      "honor_labels": false,
+      "honor_timestamps": false,
+      "metrics_path": "/metrics/NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+      "instance": null,
+      "params_string": "/target/http://192.168.100.100:80/module/http_2xx-general",
+      "destination_vnf": "webserver"
+    },
+    {
+      "exporter": "blackbox_exporter",
+      "exporterId": "86f9a22d-c3a8-4896-b82a-99ce1d3a60ab",
+      "name": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+      "endpoint": [
+        {
+          "address": "192.168.100.1",
+          "port": 8989
+        }
+      ],
+      "collectionPeriod": 15,
+      "nsId": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175",
+      "vnfdId": "spr2",
+      "honor_labels": false,
+      "honor_timestamps": false,
+      "metrics_path": "/metrics/NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+      "instance": null,
+      "params_string": "/target/http://192.168.100.100:80/module/http_2xx-general",
+      "destination_vnf": "webserver"
+    }
+  ]
+}

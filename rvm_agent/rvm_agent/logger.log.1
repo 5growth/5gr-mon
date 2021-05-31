@@ -1,0 +1,212 @@
+2020-09-15 21:31:15,915 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_4_backward [0]
+2020-09-15 21:31:15,922 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-09-15 21:31:15,923 INFO worker.py Class: RVM_agent check_messages 
+{
+    "args": [],
+    "env": {},
+    "cwd": "/tmp",
+    "body": [
+        "#!/bin/bash",
+        "",
+        "STATUS=\"$(systemctl is-active onewaylatency_exporter.service)\"",
+        "if [ \"${STATUS}\" = \"active\" ]; then",
+        "    echo \" Service onewaylatency_exporter.service running.... so exiting \"",
+        "    exit 1",
+        "fi",
+        "",
+        "mkdir -p /opt/onewaylatency_exporter",
+        "wget http://192.168.100.1:8989/resources/files/exporters/onewaylatency_exporter/exporter_one_way_latency.py -O /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "wget http://192.168.100.1:8989/resources/files/exporters/onewaylatency_exporter/requirements.txt -O /opt/onewaylatency_exporter/requirements.txt",
+        "pip3 install -r /opt/onewaylatency_exporter/requirements.txt",
+        "",
+        "cat << EOF > /etc/systemd/system/onewaylatency_exporter.service",
+        "[Unit]",
+        "Description=onewaylatency_exporter",
+        "",
+        "[Service]",
+        "Type=simple",
+        "WorkingDirectory=/opt/onewaylatency_exporter",
+        "ExecStart=/usr/bin/python3 /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "Restart=on-failure",
+        "[Install]",
+        "WantedBy=multi-user.target",
+        "EOF",
+        "",
+        "sudo systemctl daemon-reload",
+        "",
+        "sudo systemctl enable onewaylatency_exporter",
+        "",
+        "sudo systemctl start onewaylatency_exporter"
+    ],
+    "agent_id": "vm_agent_4",
+    "command_id": 1,
+    "type_message": "bash_script",
+    "object_type": "command"
+}
+2020-09-15 21:31:15,940 INFO worker.py Class: RVM_agent execute_command outs message: 
+2020-09-15 21:31:15,940 INFO worker.py Class: RVM_agent execute_command errs message: sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+
+2020-09-15 21:31:15,941 INFO worker.py Class: RVM_agent execute_command returncode message: 1
+2020-09-15 21:31:15,941 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-09-15 21:31:15,941 INFO worker.py Class: RVM_agent check_messages 
+{
+    "returncode": 1,
+    "outs": "",
+    "errs": "sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper\n",
+    "agent_id": "vm_agent_4",
+    "command_id": 1,
+    "object_type": "command_response"
+}
+2020-09-15 21:31:15,942 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-09-15 21:31:16,011 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_4_backward [0]
+2020-10-08 13:41:31,490 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 13:41:31,491 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 13:41:31,492 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 13:41:31,492 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 13:41:31,496 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 13:41:31,500 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 13:57:38,222 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 13:59:36,411 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 13:59:36,432 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 13:59:36,432 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 13:59:36,433 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 13:59:36,433 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 13:59:36,435 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 13:59:36,440 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 14:02:33,473 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:02:33,478 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 14:02:33,479 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 14:02:33,480 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 14:02:33,480 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 14:02:33,482 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 14:02:33,484 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 14:03:42,255 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:03:42,256 INFO worker.py Class: RVM_agent __init__ ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 14:03:42,263 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 14:03:42,264 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 14:03:42,265 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 14:03:42,265 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 14:03:42,269 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 14:03:42,272 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 14:04:51,667 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:04:51,668 INFO worker.py Class: RVM_agent __init__ fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:04:51,672 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 14:04:51,672 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 14:04:51,673 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 14:04:51,673 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 14:04:51,676 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 14:04:51,677 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 14:07:04,347 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:07:04,347 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:07:21,791 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:07:21,792 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:07:42,464 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:07:42,464 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:09:07,903 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:09:07,903 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:09:23,347 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:09:23,348 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:09:23,353 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 14:09:23,353 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 14:09:23,353 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 14:09:23,354 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 14:09:23,359 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 14:09:23,362 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 14:10:15,736 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:10:15,736 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:10:50,273 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:10:50,273 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:10:56,014 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 14:10:56,015 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 14:10:56,015 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 14:10:56,016 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 14:10:56,018 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 14:10:56,020 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 14:12:29,609 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:12:29,609 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:13:20,998 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:13:20,998 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:14:09,870 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:14:09,871 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:14:33,923 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:14:33,924 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:15:04,311 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:15:04,312 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 14:15:08,021 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 14:15:08,022 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 14:15:08,023 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 14:15:08,023 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 14:15:08,025 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 14:15:08,028 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 14:25:11,401 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:25:11,401 INFO worker.py Class: RVM_agent __init__ Hostname is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 14:25:11,402 INFO worker.py Class: RVM_agent __init__ RVM Agen is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 14:25:11,413 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 14:25:11,414 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_4_forward
+2020-10-08 14:25:11,414 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_4_backward
+2020-10-08 14:25:11,414 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_4_forward
+2020-10-08 14:25:11,418 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 14:25:11,422 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 14:28:37,429 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 14:28:37,429 INFO worker.py Class: RVM_agent __init__ Hostname is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 14:28:37,430 INFO worker.py Class: RVM_agent __init__ RVM Agent Id  is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 14:28:37,434 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 14:28:37,435 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 14:28:37,436 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: ktomakh-ThinkPad-X1-Carbon-2nd_backward
+2020-10-08 14:28:37,436 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 14:28:37,439 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 14:28:37,441 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 17:44:23,583 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 17:44:23,587 INFO worker.py Class: RVM_agent __init__ Hostname is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 17:44:23,588 INFO worker.py Class: RVM_agent __init__ RVM Agent Id  is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 17:44:23,621 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 17:44:23,622 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 17:44:23,622 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: ktomakh-ThinkPad-X1-Carbon-2nd_backward
+2020-10-08 17:44:23,623 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 17:44:23,638 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 17:44:23,641 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 17:45:45,300 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 17:45:45,300 INFO worker.py Class: RVM_agent __init__ Hostname is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 17:45:45,300 INFO worker.py Class: RVM_agent __init__ RVM Agent Id  is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 17:45:45,305 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 17:45:45,305 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 17:45:45,306 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: ktomakh-ThinkPad-X1-Carbon-2nd_backward
+2020-10-08 17:45:45,306 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 17:45:45,309 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 17:45:45,311 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 17:46:02,119 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 17:46:02,120 INFO worker.py Class: RVM_agent __init__ Hostname is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 17:46:02,120 INFO worker.py Class: RVM_agent __init__ RVM Agent Id  is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 17:46:02,125 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 17:46:02,125 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 17:46:02,125 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: ktomakh-ThinkPad-X1-Carbon-2nd_backward
+2020-10-08 17:46:02,126 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 17:46:02,128 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 17:46:02,130 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 17:46:34,458 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 17:46:34,459 INFO worker.py Class: RVM_agent __init__ Hostname is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 17:46:43,353 INFO worker.py Class: RVM_agent __init__ RVM Agent Id  is ktomakh-ThinkPad-X1-Carbon-2nd
+2020-10-08 17:46:50,327 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 17:46:50,327 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 17:46:50,328 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: ktomakh-ThinkPad-X1-Carbon-2nd_backward
+2020-10-08 17:46:50,329 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: ktomakh-ThinkPad-X1-Carbon-2nd_forward
+2020-10-08 17:46:50,332 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 17:46:50,334 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 17:48:23,349 INFO worker.py Class: RVM_agent __init__ identifier_mode is hostname
+2020-10-08 17:48:23,350 INFO worker.py Class: RVM_agent __init__ Hostname is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-3-spr21-2
+2020-10-08 17:48:23,351 INFO worker.py Class: RVM_agent __init__ RVM Agent Id  is fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-0-spr21-2
+2020-10-08 17:48:23,355 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-10-08 17:48:23,356 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-0-spr21-2_forward
+2020-10-08 17:48:23,356 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-0-spr21-2_backward
+2020-10-08 17:48:23,357 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: fgt-de3bd96-dc75-4d47-a8c1-bad6f3d65a06-0-spr21-2_forward
+2020-10-08 17:48:23,359 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-10-08 17:48:23,362 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-10-08 18:17:59,170 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}
+2020-10-08 18:23:01,431 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}
+2020-10-08 18:28:03,698 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}
+2020-10-08 18:33:06,506 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}
+2020-10-08 18:38:08,523 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}
+2020-10-08 18:43:10,540 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}
+2020-10-08 18:48:12,562 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}
+2020-10-08 18:53:14,579 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}
+2020-10-08 18:58:16,594 ERROR worker.py Class: ThreadKeepAlive delivery_report Message delivery failed: KafkaError{code=_MSG_TIMED_OUT,val=-192,str="Local: Message timed out"}

@@ -62,14 +62,14 @@ public class GrafanaConnector {
         this.reportFullUrl = fullUrl;
     }
 
-    Future<PostDashboardResponse> postDashboard(
+    public Future<PostDashboardResponse> postDashboard(
             GrafanaDashboardWrapper dashboard
     ) {
         log.debug("DashBoard:\n{}", dashboard.toString());
         log.debug("Requesting new dashboard {} to Grafana", dashboard.getDashboard().getTitle());
         HttpRequest<PostDashboardResponse> post =
                 client.post("/api/dashboards/db")
-                        .as(BodyCodecs.jsonCatching(PostDashboardResponse.class))
+                        .as(BodyCodecs.jsonCatching(PostDashboardResponse.class, "Grafana"))
                         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), authHeader);
 
         Future<HttpResponse<PostDashboardResponse>> future = Future.future();
@@ -80,11 +80,11 @@ public class GrafanaConnector {
         return future.compose(this::checkGrafanaOutput);
     }
 
-    Future<HttpResponse<DeleteResponse>> deleteDashboard(
+    public Future<HttpResponse<DeleteResponse>> deleteDashboard(
             String uid
     ) {
         HttpRequest<DeleteResponse> delete = client.delete("/api/dashboards/uid/" + uid)
-                .as(BodyCodecs.jsonCatching(DeleteResponse.class))
+                .as(BodyCodecs.jsonCatching( DeleteResponse.class, "Grafana"))
                 .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), authHeader);
 
         Future<HttpResponse<DeleteResponse>> future = Future.future();
@@ -94,12 +94,14 @@ public class GrafanaConnector {
 
     @SuppressWarnings("WeakerAccess") // Needed for Jackson injection
     static class DeleteResponse {
+        public String id;
         public String message;
         public String title;
 
         @Override
         public String toString() {
             return new StringJoiner(", ", DeleteResponse.class.getSimpleName() + "[", "]")
+                    .add("id='" + id + "'")
                     .add("message='" + message + "'")
                     .add("title='" + title + "'")
                     .toString();

@@ -24,6 +24,7 @@ import it.nextworks.nfvmano.configmanager.rvmagent.model.RVMAgentExporter;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 public interface RVMAgentRepo {
@@ -40,11 +41,11 @@ public interface RVMAgentRepo {
 
     Future<AddPrometheusCollectorResponse> addPrometheusCollector(PrometheusCollector prometheusCollector);
 
-    Future<String> deletePrometheusCollectorById(String agentId, String prometheusCollectorId);
+    Future<Set<String>> deletePrometheusCollectorById(String agentId, String prometheusCollectorId);
 
     Future<Optional<List<RVMAgent>>> findAll();
 
-    Future<String> deleteAgentById(String agentId);
+    Future<Set<String>> deleteAgentById(String agentId);
 
     Future<RVMAgentExporter> deletePrometheusExporterById(String agentId, String prometheusExporterId);
 }

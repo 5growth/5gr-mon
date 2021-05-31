@@ -1,0 +1,29 @@
+{
+  "groups": [
+    {
+      "rules": [
+        {
+          "annotations": {},
+          "expr": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0 > 0.0",
+          "alert": "19061b80-88c3-4654-b00f-6a4840912f46",
+          "labels": {
+            "severity": "warning",
+            "alertName": "alert1"
+          },
+          "for": "10s"
+        },
+        {
+          "annotations": {},
+          "expr": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0 > 0.0",
+          "alert": "b6163359-e5d4-4ad9-af15-a8d4b7eb7093",
+          "labels": {
+            "severity": "warning",
+            "alertName": "alert1"
+          },
+          "for": "10s"
+        }
+      ],
+      "name": "X-ConfigManager"
+    }
+  ]
+}

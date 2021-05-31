@@ -7,13 +7,35 @@
       {"key": "uninstall_template",
         "value": "node_exporter_uninstall.template"}
       ],
-  "app_exporter": [
+  "onewaylatency_exporter": [
     {"key":"port",
-      "value": 9107},
+      "value": 15000},
     {"key": "install_template",
-      "value": "ha_exporter.template"},
+      "value": "onewaylatency_exporter.template"},
     {"key": "uninstall_template",
-      "value": "ha_exporter_uninstall.template"}
+      "value": "onewaylatency_exporter_uninstall.template"}
+  ],
+  "blackbox_exporter": [
+    {"key":"port",
+      "value": 9115},
+    {"key": "install_template",
+      "value": "blackbox_exporter.template"},
+    {"key": "uninstall_template",
+      "value": "blackbox_exporter_uninstall.template"}
+  ],
+  "peccm_exporter": [
+    {"key":"port",
+      "value": 11000},
+    {"key": "install_template",
+      "value": "peccm_exporter.template"},
+    {"key": "uninstall_template",
+      "value": "peccm_exporter_uninstall.template"}
+  ],
+  "filebeat": [
+    {"key": "install_template",
+      "value": "filebeat.template"},
+    {"key": "uninstall_template",
+      "value": "filebeat_uninstall.template"}
   ]
 
 }

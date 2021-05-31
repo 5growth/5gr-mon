@@ -1,0 +1,62 @@
+{
+  "global": null,
+  "route": {
+    "receiver": "default",
+    "group_wait": "1s",
+    "group_interval": "1s",
+    "repeat_interval": "1s",
+    "group_by": [
+      "cluster",
+      "alertname"
+    ],
+    "routes": [
+      {
+        "match": {
+          "alertname": "30a4b5ce-e8e6-4c61-9e18-0be1d5d891bf"
+        },
+        "receiver": "c7085fbd-ca8b-470d-a8c8-0b900e5a62ed"
+      },
+      {
+        "match": {
+          "alertname": "df582efd-3f18-4d0d-a2f5-6a9a0ad53eaa"
+        },
+        "receiver": "c7085fbd-ca8b-470d-a8c8-0b900e5a62ed"
+      },
+      {
+        "match": {
+          "alertname": "f05c4c69-cedf-4fe5-810a-18acc9f20ca6"
+        },
+        "receiver": "c7085fbd-ca8b-470d-a8c8-0b900e5a62ed"
+      }
+    ]
+  },
+  "receivers": [
+    {
+      "name": "default",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://localhost:8088"
+        }
+      ]
+    },
+    {
+      "name": "5d77d2f1-712d-47ad-8210-7ec841f092a5",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://172.18.204.81:8080/sla_manager/notifications"
+        }
+      ]
+    },
+    {
+      "name": "c7085fbd-ca8b-470d-a8c8-0b900e5a62ed",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://localhost:8080"
+        }
+      ]
+    }
+  ]
+}

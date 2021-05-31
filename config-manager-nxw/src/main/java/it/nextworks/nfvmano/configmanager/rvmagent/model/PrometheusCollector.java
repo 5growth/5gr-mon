@@ -8,6 +8,7 @@ import it.nextworks.nfvmano.configmanager.sb.kafkaRVMAgent.model.MessageToRVMAge
 import it.nextworks.nfvmano.configmanager.utils.Validated;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class PrometheusCollector implements MessageToRVMAgent, Validated {
@@ -24,14 +25,15 @@ public class PrometheusCollector implements MessageToRVMAgent, Validated {
     @JsonProperty("prometheus_job")
     private String prometheusJob;
     private String interval;
-    private List<PrometheusLabel> labels;
+    private List<StructureKeyValue> labels;
     @JsonProperty("object_type")
     private String objectType = "add_prometheus_collector";
+    private List<StructureKeyValue> params;
 
     public PrometheusCollector() {
     }
 
-    public PrometheusCollector(String rvmAgentId, String host, String prometheusTopic, String port, String nodeUrlSuffix, String prometheusJob, String interval, List<PrometheusLabel> labels) {
+    public PrometheusCollector(String rvmAgentId, String host, String prometheusTopic, String port, String nodeUrlSuffix, String prometheusJob, String interval, List<StructureKeyValue> labels) {
         this.rvmAgentId = rvmAgentId;
         this.host = host;
         this.prometheusTopic = prometheusTopic;
@@ -108,58 +110,60 @@ public class PrometheusCollector implements MessageToRVMAgent, Validated {
         this.interval = interval;
     }
 
-    public List<PrometheusLabel> getLabels() {
+    public List<StructureKeyValue> getLabels() {
         return labels;
     }
 
-    public void setLabels(List<PrometheusLabel> labels) {
+    public void setLabels(List<StructureKeyValue> labels) {
         this.labels = labels;
+    }
+
+    public List<StructureKeyValue> getParams() {
+        return params;
+    }
+
+    public void setParams(List<StructureKeyValue> params) {
+        this.params = params;
+    }
+
+    @Override
+    public String toString() {
+        return "PrometheusCollector{" +
+                "collectorId='" + collectorId + '\'' +
+                ", rvmAgentId='" + rvmAgentId + '\'' +
+                ", host='" + host + '\'' +
+                ", prometheusTopic='" + prometheusTopic + '\'' +
+                ", port='" + port + '\'' +
+                ", nodeUrlSuffix='" + nodeUrlSuffix + '\'' +
+                ", prometheusJob='" + prometheusJob + '\'' +
+                ", interval='" + interval + '\'' +
+                ", labels=" + labels +
+                ", objectType='" + objectType + '\'' +
+                ", params=" + params +
+                '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         PrometheusCollector that = (PrometheusCollector) o;
-
-        if (rvmAgentId != null ? !rvmAgentId.equals(that.rvmAgentId) : that.rvmAgentId != null) return false;
-        if (host != null ? !host.equals(that.host) : that.host != null) return false;
-        if (prometheusTopic != null ? !prometheusTopic.equals(that.prometheusTopic) : that.prometheusTopic != null) return false;
-        if (port != null ? !port.equals(that.port) : that.port != null) return false;
-        if (nodeUrlSuffix != null ? !nodeUrlSuffix.equals(that.nodeUrlSuffix) : that.nodeUrlSuffix != null)
-            return false;
-        if (prometheusJob != null ? !prometheusJob.equals(that.prometheusJob) : that.prometheusJob != null)
-            return false;
-        if (interval != null ? !interval.equals(that.interval) : that.interval != null) return false;
-        return labels != null ? labels.equals(that.labels) : that.labels == null;
+        return Objects.equals(collectorId, that.collectorId) &&
+                Objects.equals(rvmAgentId, that.rvmAgentId) &&
+                Objects.equals(host, that.host) &&
+                Objects.equals(prometheusTopic, that.prometheusTopic) &&
+                Objects.equals(port, that.port) &&
+                Objects.equals(nodeUrlSuffix, that.nodeUrlSuffix) &&
+                Objects.equals(prometheusJob, that.prometheusJob) &&
+                Objects.equals(interval, that.interval) &&
+                Objects.equals(labels, that.labels) &&
+                Objects.equals(objectType, that.objectType) &&
+                Objects.equals(params, that.params);
     }
 
     @Override
     public int hashCode() {
-        int result = rvmAgentId != null ? rvmAgentId.hashCode() : 0;
-        result = 31 * result + (host != null ? host.hashCode() : 0);
-        result = 31 * result + (prometheusTopic != null ? prometheusTopic.hashCode() : 0);
-        result = 31 * result + (port != null ? port.hashCode() : 0);
-        result = 31 * result + (nodeUrlSuffix != null ? nodeUrlSuffix.hashCode() : 0);
-        result = 31 * result + (prometheusJob != null ? prometheusJob.hashCode() : 0);
-        result = 31 * result + (interval != null ? interval.hashCode() : 0);
-        result = 31 * result + (labels != null ? labels.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "PrometheusCollector{" +
-                "agent_id='" + rvmAgentId + '\'' +
-                ", host='" + host + '\'' +
-                ", topic='" + prometheusTopic + '\'' +
-                ", port='" + port + '\'' +
-                ", node_url_suffix='" + nodeUrlSuffix + '\'' +
-                ", prometheus_job='" + prometheusJob + '\'' +
-                ", interval='" + interval + '\'' +
-                ", labels=" + labels +
-                '}';
+        return Objects.hash(collectorId, rvmAgentId, host, prometheusTopic, port, nodeUrlSuffix, prometheusJob, interval, labels, objectType, params);
     }
 
     public String getCollectorId() {

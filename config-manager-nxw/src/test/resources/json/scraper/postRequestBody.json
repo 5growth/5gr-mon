@@ -1,0 +1,8 @@
+{
+  "performanceMetric": "latency_ms",
+  "nsid": "fgt-f655e4d-1422-411f-bde5-df7a79277878",
+  "vnfid": "webserver",
+  "interval": 1,
+  "kafkaTopic": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175_scaling",
+  "expression": "{nsId=\"NS-fgt-f655e4d-1422-411f-bde5-df7a79277878\"}"
+}

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+STATUS="$(systemctl is-active peccm_exporter.service)"
+if [ "${STATUS}" = "active" ]; then
+    echo " Service peccm_exporter.service running.... so exiting "
+    exit 0
+fi
+
+mkdir -p /opt/peccm_exporter
+wget {{ fileserver_url }}/resources/files/exporters/peccm_exporter/peccm_exporter.tar.gz -O /opt/peccm_exporter/peccm_exporter.tar.gz
+cd /opt/peccm_exporter
+tar xvfz peccm_exporter.tar.gz
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+pip3 install -r /opt/peccm_exporter/requirements.txt
+
+cat << EOF > /etc/systemd/system/peccm_exporter.service
+[Unit]
+Description=peccm_exporter
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/peccm_exporter
+ExecStart=/usr/bin/python3 /opt/peccm_exporter/server_probe.py
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+
+sudo systemctl enable peccm_exporter
+
+sudo systemctl start peccm_exporter

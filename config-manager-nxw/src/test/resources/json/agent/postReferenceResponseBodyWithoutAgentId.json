@@ -1,0 +1,7 @@
+{
+  "agent_id": "vm_agent_1",
+  "install_method": "cloud_init",
+  "description": "VNF_1",
+  "cloud_init_script": "#!/bin/bash -e\n\n# Download and execute the script that will take care of the agent installation\n\nadd_ssl_cert()\n{\n    # Create all the directories in the path to the cert file\n    mkdir -p $(dirname /home/ubuntu/vm_agent_1/cert/cert.pem)\n    echo \"cert\" > /home/ubuntu/vm_agent_1/cert/cert.pem\n}\nexport -f add_ssl_cert\n\ndownload()\n{\n    SCRIPT_NAME=$1\n\n    if command -v wget > /dev/null 2>&1; then\n        wget http://127.0.0.1:8989/resources/scripts/4f160e0a-dcf4-4ebe-bc2a-d571599c9a95.sh -O ${SCRIPT_NAME} --ca-certificate /home/ubuntu/vm_agent_1/cert/cert.pem\n    elif command -v curl > /dev/null 2>&1; then\n        curl -L -o ${SCRIPT_NAME} http://127.0.0.1:8989/resources/scripts/4f160e0a-dcf4-4ebe-bc2a-d571599c9a95.sh --cacert /home/ubuntu/vm_agent_1/cert/cert.pem\n    else\n        echo >&2 \"error: wget/curl not found. cannot download agent installation script\"\n        return 1\n    fi\n}\n\n# Create a temp directory and cd into it\ncd $(mktemp -d)\n\n# If using `sudo` the script is running as a user, and there's no need\n# to use `su`. If running as root, `su` as the user, otherwise the cert\n# dir will be created with root privileges\n\nadd_ssl_cert\n\n\ndownload agent_installer.sh\nchmod +x ./agent_installer.sh\nsudo ./agent_installer.sh\nrm ./agent_installer.sh\n",
+  "daemon_user": "ubuntu"
+}

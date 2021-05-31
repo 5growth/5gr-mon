@@ -1,13 +1,9 @@
 package it.nextworks.nfvmano.configmanager.rvmagent.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.vertx.ext.web.api.validation.ValidationException;
-import it.nextworks.nfvmano.configmanager.rvmagent.model.PrometheusLabel;
-import it.nextworks.nfvmano.configmanager.sb.kafkaRVMAgent.model.MessageToRVMAgent;
-import it.nextworks.nfvmano.configmanager.utils.Validated;
+import it.nextworks.nfvmano.configmanager.rvmagent.model.StructureKeyValue;
 
 import java.util.List;
-import java.util.Optional;
 
 public class AddPrometheusCollectorResponse {
     @JsonProperty("collector_id")
@@ -23,12 +19,12 @@ public class AddPrometheusCollectorResponse {
     @JsonProperty("prometheus_job")
     private String prometheusJob;
     private String interval;
-    private List<PrometheusLabel> labels;
+    private List<StructureKeyValue> labels;
 
     public AddPrometheusCollectorResponse() {
     }
 
-    public AddPrometheusCollectorResponse(String collectorId, String rvmAgentId, String host, String prometheusTopic, String port, String nodeUrlSuffix, String prometheusJob, String interval, List<PrometheusLabel> labels) {
+    public AddPrometheusCollectorResponse(String collectorId, String rvmAgentId, String host, String prometheusTopic, String port, String nodeUrlSuffix, String prometheusJob, String interval, List<StructureKeyValue> labels) {
         this.collectorId = collectorId;
         this.rvmAgentId = rvmAgentId;
         this.host = host;
@@ -104,11 +100,11 @@ public class AddPrometheusCollectorResponse {
         this.interval = interval;
     }
 
-    public List<PrometheusLabel> getLabels() {
+    public List<StructureKeyValue> getLabels() {
         return labels;
     }
 
-    public void setLabels(List<PrometheusLabel> labels) {
+    public void setLabels(List<StructureKeyValue> labels) {
         this.labels = labels;
     }
 

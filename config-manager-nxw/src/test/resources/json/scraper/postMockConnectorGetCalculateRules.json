@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "rules": [
+        {
+          "expr": "{nsId=\"NS-fgt-f655e4d-1422-411f-bde5-df7a79277878\"}",
+          "record": "latency_ms",
+          "labels": {
+            "nsId": "fgt-f655e4d-1422-411f-bde5-df7a79277878",
+            "vnfdId": "webserver"
+          }
+        }
+      ],
+      "name": "performanceMetric"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "forSeconds": 10,
+    "alertId": "bb6e497b-743c-4c3e-95b7-950e85a33954",
+    "alertName": "alert1",
+    "labels": [],
+    "query": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0",
+    "severity": "warning",
+    "for": "10s",
+    "target": "http://localhost:8080",
+    "value": 0.0,
+    "kind": "G"
+  },
+  {
+    "forSeconds": 10,
+    "alertId": "c2b0fb61-ec91-4fb6-a46a-7be1334cc340",
+    "alertName": "alert1",
+    "labels": [],
+    "query": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0",
+    "severity": "warning",
+    "for": "10s",
+    "target": "http://localhost:8080",
+    "value": 0.0,
+    "kind": "G"
+  }
+]

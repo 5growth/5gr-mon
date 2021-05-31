@@ -1,0 +1,38 @@
+{
+  "dashboard": [
+    {
+      "dashboardId": "7nhtMfYGk",
+      "panels": [
+        {
+          "size": "fullscreen",
+          "query": "sum(rate(http_requests_total[1m]))",
+          "title": "mp1(VcpuUsageMean.spr2)"
+        }
+      ],
+      "refreshTime": "5s",
+      "name": "test_dash4",
+      "plottedTime": 61,
+      "url": "/d/7nhtMfYGk/test_dash4",
+      "users": [
+        "pippo"
+      ]
+    },
+    {
+      "dashboardId": "1LotGBYMz",
+      "panels": [
+        {
+          "size": "fullscreen",
+          "query": "sum(rate(http_requests_total[1m]))",
+          "title": "mp1(VcpuUsageMean.spr2)"
+        }
+      ],
+      "refreshTime": "5s",
+      "name": "test_dash5",
+      "plottedTime": 61,
+      "url": "/d/1LotGBYMz/test_dash5",
+      "users": [
+        "pippo"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+sudo systemctl stop onewaylatency_exporter
+
+sudo systemctl disable onewaylatency_exporter
+
+rm -f /etc/systemd/system/onewaylatency_exporter.service
+
+sudo systemctl daemon-reload
+
+
+
+
+
+
+
+
+

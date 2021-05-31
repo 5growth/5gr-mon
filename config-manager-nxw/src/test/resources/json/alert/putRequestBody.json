@@ -1,0 +1,12 @@
+{
+  "forSeconds": 10,
+  "alertId": "f05c4c69-cedf-4fe5-810a-18acc9f20ca6",
+  "alertName": "alert2",
+  "labels": [],
+  "query": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0",
+  "severity": "warning",
+  "for": "10s",
+  "target": "http://localhost:8080",
+  "value": 0.0,
+  "kind": "G"
+}

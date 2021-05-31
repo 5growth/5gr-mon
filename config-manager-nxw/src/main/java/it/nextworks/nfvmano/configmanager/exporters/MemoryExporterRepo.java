@@ -35,7 +35,11 @@ import java.util.UUID;
  */
 public class MemoryExporterRepo implements ExporterRepo {
 
-    private Map<String, Exporter> map = new HashMap<>();
+    private Map<String, Exporter> map;
+
+    public MemoryExporterRepo() {
+        this.map = new HashMap<>();
+    }
 
 //    Test methods, not used currently
 //
@@ -97,6 +101,9 @@ public class MemoryExporterRepo implements ExporterRepo {
         exporter.setVnfdId(description.getVnfdId());
         exporter.setInstance(description.getInstance());
         exporter.setMetricsPath(description.getMetricsPath());
+        exporter.setExporter(description.getExporter());
+        exporter.setDestinationVnf(description.getDestinationVnf());
+        exporter.setParamsString(description.getParamsString());
         String uuid = UUID.randomUUID().toString();
         exporter.setExporterId(uuid);
         return save(exporter);

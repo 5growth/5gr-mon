@@ -12,8 +12,6 @@ Call: H2020-ICT-2019. Topic: ICT-19-2019. Type of action: RIA. Duration: 30 Mont
 <p align="center">
 <img src="https://5g-ppp.eu/wp-content/uploads/2019/06/5Growth_rgb_horizontal.png" width="300px" />
 </p>
- 
-
 
 
 # List of components
@@ -24,10 +22,10 @@ Call: H2020-ICT-2019. Topic: ICT-19-2019. Type of action: RIA. Duration: 30 Mont
 2. [Config Manager](#config-manager)
 3. [Remote virtual machine agent](#rvm-agent)
 4. [Log Monitoring System](#log-monitoring)
-    1. [Log Monitoring Pipeline](#log-monitoring-pipeline)
-    2. [(Old) Kibana Dashboard API Json Generator](#dep-kibana-dashboards-telca)
-    3. [IPFIX to Kafka parser and exporter](#exp-ipfix-telca)
-    4. [Packetbeat container](#exp-packetbeat-telca)
+   1. [Log Monitoring Pipeline](#log-monitoring-pipeline)
+   2. [(Old) Kibana Dashboard API Json Generator](#dep-kibana-dashboards-telca)
+   3. [IPFIX to Kafka parser and exporter](#exp-ipfix-telca)
+   4. [Packetbeat container](#exp-packetbeat-telca)
 
 ## 1. Monitoring Core <a name="monitoring-core"></a>
 
@@ -40,46 +38,57 @@ Folder: `mon-core`
 ## 2. Config Manager <a name="config-manager"></a>
 
 The Prometheus Config Manager acts as a relay point enabling the configuration of a
-Prometheus + Alertmanager + Grafana deployment from a single RESTful HTTP endpoint.
+Prometheus + Alertmanager + Grafana + Log Monitoring Pipeline deployment from a single RESTful HTTP endpoint.
 
 Folder: `config-manager-nxw`
 
 
 
 ## 3. Remote virtual machine agent <a name="rvm-agent"></a>
-Mirantis TBC
+
 
 RVM agent features:
-- Bash script code execution on remote VM and providing the execution result
+- Bash and python script code execution at remote VM and providing the execution result
 - Keepalive mechanism
 - RVM agent Prometheus Collectors management (create/delete)
 - RVM agent configuration management (avoid config loss after restart)
+- Filebeat installation and configuration
 
 Folder: `rvm_agent`
 
-## 4. Log Monitoring System <a name="log-monitoring"></a>
+## 4. Client-side monitoring probes
+
+### 4.1. Native and 3rd-party client-side monitoring probes <a name="client-side-probe"></a>
+
+Folder: `client-side/probe`
+
+### 4.2. Prometheus exporter for collecting customer metrics (PECCM) <a name="client-side-PECCM"></a>
+
+Folder: `client-side/PECCM`
+
+## 5. Log Monitoring System <a name="log-monitoring"></a>
 
 This contains the Log Monitoring system and other useful tools related to this block.
 
-### 4.1. Log Monitoring Pipeline <a name="log-monitoring-pipeline"></a>
+### 5.1. Log Monitoring Pipeline <a name="log-monitoring-pipeline"></a>
 
 This contains the projects related to the Log Monitoring Pipeline, having the final version of the Kibana Dashboards application, composed by two separated modules: Kibana Dashboards Manager and Kibana Dashboards Generator, and also a repository containing all the Docker Images and Kubernetes deployments used to deploy the Log Monitoring Pipeline.
 
 Folder: `log_monitoring_pipeline`
 
-### 4.2. (Old) Kibana Dashboard API Json Generator <a name="dep-kibana-dashboards-telca"></a>
+### 5.2. (Old) Kibana Dashboard API Json Generator <a name="dep-kibana-dashboards-telca"></a>
 
 Old version of the Kibana Dashboards Generator, maintained for the sake of completeness.
 
 Folder: `dep-kibana-dashboards-telca`
 
-### 4.3. IPFIX to Kafka parser and exporter <a name="exp-ipfix-telca"></a>
+### 5.3. IPFIX to Kafka parser and exporter <a name="exp-ipfix-telca"></a>
 
 An exporter used to collect, parser and transform [IPFIX](https://www.iana.org/assignments/ipfix/ipfix.xhtml) data to JSON format.
 
 Folder: `exp-ipfix-telca`
 
-### 4.4. Packetbeat container <a name="exp-packetbeat-telca"></a>
+### 5.4. Packetbeat container <a name="exp-packetbeat-telca"></a>
 
 Packetbeat container works by capturing the network traffic
 

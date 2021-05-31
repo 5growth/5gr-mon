@@ -17,17 +17,12 @@
 package it.nextworks.nfvmano.configmanager.prometheusScraper;
 
 import io.vertx.core.Future;
-import it.nextworks.nfvmano.configmanager.alerts.model.Alert;
 import it.nextworks.nfvmano.configmanager.prometheusScraper.model.PrometheusScraper;
 
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * Created by Marco Capitani on 05/04/19.
- *
- * @author Marco Capitani <m.capitani AT nextworks.it>
- */
+
 public interface PrometheusScraperRepo {
     
     Future<PrometheusScraper> save(PrometheusScraper prometheusScraper);

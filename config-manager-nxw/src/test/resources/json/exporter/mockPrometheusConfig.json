@@ -1,0 +1,45 @@
+{
+  "scrape_configs": [
+    {
+      "static_configs": [
+        {
+          "targets": [
+            "192.168.100.1:8989"
+          ],
+          "labels": {
+            "exporter": "blackbox_exporter",
+            "nsId": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175",
+            "params_string": "/target/http://192.168.100.100:80/module/http_2xx-general",
+            "vnfdId": "spr2",
+            "destination_vnf": "webserver"
+          }
+        }
+      ],
+      "job_name": "299e0f5b-e505-498d-8c63-4fc49b0ef430",
+      "scrape_interval": "15s",
+      "honor_labels": false,
+      "honor_timestamps": false,
+      "metrics_path": "/metrics/NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    }
+  ],
+  "global": {
+    "evaluation_interval": "10s",
+    "scrape_interval": "15s"
+  },
+  "alerting": {
+    "alertmanagers": [
+      {
+        "static_configs": [
+          {
+            "targets": [
+              "mon_alertmanager:9093"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "rule_files": [
+    "alert.rules"
+  ]
+}

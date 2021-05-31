@@ -1,0 +1,24 @@
+#!/bin/bash
+wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.5.0-amd64.deb –P /tmp/filebeat-7.5.0-amd64.deb
+sudo dpkg -i /tmp/filebeat-7.5.0-amd64.deb
+rm /tmp/filebeat-7.5.0-amd64.deb
+sudo systemctl stop filebeat
+sudo mkdir -p /etc/filebeat
+cat << EOF > /etc/filebeat/filebeat.yml
+filebeat.inputs:
+- type: log
+  paths:
+    {% for path in paths -%}
+    - {{path}}
+    {% endfor %}
+
+output.kafka:
+  hosts: ["{{kafka_bootstrap_server}}"]
+  topic: "{{nsId}}"
+EOF
+
+sudo systemctl daemon-reload
+
+sudo systemctl enable filebeat
+
+sudo systemctl start filebeat

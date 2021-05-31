@@ -24,8 +24,6 @@ import io.vertx.ext.web.handler.impl.HttpStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-
 /**
  * Created by Marco Capitani on 31/10/18.
  *
@@ -35,7 +33,7 @@ public final class BodyCodecs {
 
     private static final Logger log = LoggerFactory.getLogger(BodyCodecs.class);
 
-    public static <T> BodyCodec<T> jsonCatching(Class<T> type) {
+    public static <T> BodyCodec<T> jsonCatching(Class<T> type, String dest) {
         return new BodyCodecImpl<>(b -> {
             try {
                 return Json.decodeValue(b.toString(), type);
@@ -44,7 +42,7 @@ public final class BodyCodecs {
                 log.warn("Original message:\n{}", b.toString());
                 throw new HttpStatusException(
                         500,
-                        "Error during communication with Grafana"
+                        "Error during communication with " + dest
                 );
             }
         });

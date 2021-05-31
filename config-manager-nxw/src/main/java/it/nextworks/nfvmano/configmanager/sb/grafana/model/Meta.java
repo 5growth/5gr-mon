@@ -94,4 +94,25 @@ public class Meta {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Meta meta = (Meta) o;
+
+        if (canSave != meta.canSave) return false;
+        if (canEdit != meta.canEdit) return false;
+        if (canStar != meta.canStar) return false;
+        return createdBy != null ? createdBy.equals(meta.createdBy) : meta.createdBy == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (canSave ? 1 : 0);
+        result = 31 * result + (canEdit ? 1 : 0);
+        result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
+        result = 31 * result + (canStar ? 1 : 0);
+        return result;
+    }
 }

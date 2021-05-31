@@ -1,0 +1,36 @@
+[
+  {
+    "dashboardId": "7nhtMfYGk",
+    "url": "/d/7nhtMfYGk/test_dash4",
+    "name": "test_dash4",
+    "panels": [
+      {
+        "title": "mp1(VcpuUsageMean.spr2)",
+        "query": "sum(rate(http_requests_total[1m]))",
+        "size": "fullscreen"
+      }
+    ],
+    "users": [
+      "pippo"
+    ],
+    "plottedTime": 61,
+    "refreshTime": "5s"
+  },
+  {
+    "dashboardId": "1LotGBYMz",
+    "url": "/d/1LotGBYMz/test_dash5",
+    "name": "test_dash5",
+    "panels": [
+      {
+        "title": "mp1(VcpuUsageMean.spr2)",
+        "query": "sum(rate(http_requests_total[1m]))",
+        "size": "fullscreen"
+      }
+    ],
+    "users": [
+      "pippo"
+    ],
+    "plottedTime": 61,
+    "refreshTime": "5s"
+  }
+]

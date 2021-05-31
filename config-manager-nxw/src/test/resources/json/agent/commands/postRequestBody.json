@@ -1,0 +1,12 @@
+{
+  "agent_id": "vm_agent_1",
+  "args": ["arg1_value", "arg2_value"],
+  "env": {"MY_ENV_VARIABLE": "MY_ENV_VARIABLE_VALUE"},
+  "type_message": "bash_script",
+  "cwd": "/",
+  "body": ["#! /bin/bash -e",
+    "ls -la",
+    "date",
+    "echo $1",
+    "exit 0"]
+}

@@ -63,6 +63,16 @@ public class ExporterService implements ExporterRepo {
         if (exporter.getInstance() != null) {
             labels.put("instance", exporter.getInstance());
         }
+        if (exporter.getExporter() != null) {
+            labels.put("exporter", exporter.getExporter());
+        }
+        if (exporter.getParamsString() != null) {
+            labels.put("params_string", exporter.getParamsString());
+        }
+        if (exporter.getDestinationVnf() != null) {
+            labels.put("destination_vnf", exporter.getDestinationVnf());
+        }
+
         return new StaticConfigs(targets, labels);
     }
 

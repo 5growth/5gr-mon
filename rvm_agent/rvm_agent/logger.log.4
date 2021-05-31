@@ -1,0 +1,582 @@
+2020-07-07 17:31:08,420 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:31:08,427 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "added_prometheus_collector",
+    "param_for_url": "ip=127.0.0.1&polling=2",
+    "url": "http://127.0.0.1:15000/metrics?ip=127.0.0.1&polling=2"
+}
+2020-07-07 17:31:08,431 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:31:08,460 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:31:08,545 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:31:08,546 INFO worker.py Class: RVM_agent check_messages 
+{
+    "args": [],
+    "env": {},
+    "cwd": "/tmp",
+    "body": [
+        "#!/bin/bash",
+        "",
+        "STATUS=\"$(systemctl is-active onewaylatency_exporter.service)\"",
+        "if [ \"${STATUS}\" = \"active\" ]; then",
+        "    echo \" Service onewaylatency_exporter.service running.... so exiting \"",
+        "    exit 1",
+        "fi",
+        "",
+        "mkdir -p /opt/onewaylatency_exporter",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/exporter_one_way_latency.py -O /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/requirements.txt -O /opt/onewaylatency_exporter/requirements.txt",
+        "pip3 install -r /opt/onewaylatency_exporter/requirements.txt",
+        "",
+        "cat << EOF > /etc/systemd/system/onewaylatency_exporter.service",
+        "[Unit]",
+        "Description=onewaylatency_exporter",
+        "",
+        "[Service]",
+        "Type=simple",
+        "WorkingDirectory=/opt/onewaylatency_exporter",
+        "ExecStart=/usr/bin/python3 /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "Restart=on-failure",
+        "[Install]",
+        "WantedBy=multi-user.target",
+        "EOF",
+        "",
+        "sudo systemctl daemon-reload",
+        "",
+        "sudo systemctl enable onewaylatency_exporter",
+        "",
+        "sudo systemctl start onewaylatency_exporter"
+    ],
+    "agent_id": "vm_agent_1",
+    "command_id": 1,
+    "type_message": "bash_script",
+    "object_type": "command"
+}
+2020-07-07 17:31:08,690 INFO worker.py Class: RVM_agent execute_command outs message:  Service onewaylatency_exporter.service running.... so exiting 
+
+2020-07-07 17:31:08,692 INFO worker.py Class: RVM_agent execute_command errs message: 
+2020-07-07 17:31:08,697 INFO worker.py Class: RVM_agent execute_command returncode message: 1
+2020-07-07 17:31:08,698 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:31:08,700 INFO worker.py Class: RVM_agent check_messages 
+{
+    "returncode": 1,
+    "outs": " Service onewaylatency_exporter.service running.... so exiting \n",
+    "errs": "",
+    "agent_id": "vm_agent_1",
+    "command_id": 1,
+    "object_type": "command_response"
+}
+2020-07-07 17:31:08,701 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:31:08,724 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:33:35,815 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-07-07 17:33:35,816 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_1_forward
+2020-07-07 17:33:35,817 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_1_backward
+2020-07-07 17:33:35,817 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_1_forward
+2020-07-07 17:33:35,821 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:33:35,823 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:33:35,826 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:33:35,830 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-07-07 17:33:35,832 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:33:35,836 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:33:35,847 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-07-07 17:33:35,868 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:33:41,466 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:33:41,469 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "add_prometheus_collector"
+}
+2020-07-07 17:33:41,470 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:33:41,481 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:33:41,481 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:33:41,484 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "added_prometheus_collector",
+    "url": "http://127.0.0.1:15000/metrics?ip=127.0.0.1&polling=2"
+}
+2020-07-07 17:33:41,490 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:33:41,534 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:33:41,555 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:33:41,556 INFO worker.py Class: RVM_agent check_messages 
+{
+    "args": [],
+    "env": {},
+    "cwd": "/tmp",
+    "body": [
+        "#!/bin/bash",
+        "",
+        "STATUS=\"$(systemctl is-active onewaylatency_exporter.service)\"",
+        "if [ \"${STATUS}\" = \"active\" ]; then",
+        "    echo \" Service onewaylatency_exporter.service running.... so exiting \"",
+        "    exit 1",
+        "fi",
+        "",
+        "mkdir -p /opt/onewaylatency_exporter",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/exporter_one_way_latency.py -O /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "wget http://127.0.0.1:8989/resources/files/exporters/onewaylatency_exporter/requirements.txt -O /opt/onewaylatency_exporter/requirements.txt",
+        "pip3 install -r /opt/onewaylatency_exporter/requirements.txt",
+        "",
+        "cat << EOF > /etc/systemd/system/onewaylatency_exporter.service",
+        "[Unit]",
+        "Description=onewaylatency_exporter",
+        "",
+        "[Service]",
+        "Type=simple",
+        "WorkingDirectory=/opt/onewaylatency_exporter",
+        "ExecStart=/usr/bin/python3 /opt/onewaylatency_exporter/exporter_one_way_latency.py",
+        "Restart=on-failure",
+        "[Install]",
+        "WantedBy=multi-user.target",
+        "EOF",
+        "",
+        "sudo systemctl daemon-reload",
+        "",
+        "sudo systemctl enable onewaylatency_exporter",
+        "",
+        "sudo systemctl start onewaylatency_exporter"
+    ],
+    "agent_id": "vm_agent_1",
+    "command_id": 2,
+    "type_message": "bash_script",
+    "object_type": "command"
+}
+2020-07-07 17:33:41,590 INFO worker.py Class: RVM_agent execute_command outs message:  Service onewaylatency_exporter.service running.... so exiting 
+
+2020-07-07 17:33:41,590 INFO worker.py Class: RVM_agent execute_command errs message: 
+2020-07-07 17:33:41,591 INFO worker.py Class: RVM_agent execute_command returncode message: 1
+2020-07-07 17:33:41,591 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:33:41,592 INFO worker.py Class: RVM_agent check_messages 
+{
+    "returncode": 1,
+    "outs": " Service onewaylatency_exporter.service running.... so exiting \n",
+    "errs": "",
+    "agent_id": "vm_agent_1",
+    "command_id": 2,
+    "object_type": "command_response"
+}
+2020-07-07 17:33:41,593 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:33:41,624 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:34:04,696 INFO worker.py Class: RVM_agent __init__ Agent uses bootstrap servers: 192.168.100.220
+2020-07-07 17:34:04,697 INFO worker.py Class: RVM_agent __init__ Agent uses forward topic: vm_agent_1_forward
+2020-07-07 17:34:04,698 INFO worker.py Class: RVM_agent __init__ Agent uses backward topic: vm_agent_1_backward
+2020-07-07 17:34:04,698 INFO worker.py Class: RVM_agent __init__ Agent uses group.id: vm_agent_1_forward
+2020-07-07 17:34:04,702 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:34:04,703 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:34:04,706 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:34:04,709 INFO worker.py Class: RVM_agent check_messages Agent started
+2020-07-07 17:34:04,713 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:34:04,716 INFO worker.py Class: ThreadKeepAlive run Agent started keepalive proccess
+2020-07-07 17:34:04,718 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:34:04,719 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:34:12,634 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:34:12,636 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "add_prometheus_collector"
+}
+2020-07-07 17:34:12,637 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:34:12,647 INFO worker.py Class: RVM_agent check_messages Agent prepeared the answer on the message
+2020-07-07 17:34:12,649 INFO worker.py Class: RVM_agent check_messages 
+{
+    "host": "127.0.0.1",
+    "port": "15000",
+    "interval": "1",
+    "labels": [
+        {
+            "key": "nsId",
+            "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+        },
+        {
+            "key": "vnfdId",
+            "value": "spr2"
+        },
+        {
+            "key": "instance",
+            "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+        },
+        {
+            "key": "exporter",
+            "value": "onewaylatency_exporter"
+        }
+    ],
+    "params": [
+        {
+            "key": "ip",
+            "value": "127.0.0.1"
+        },
+        {
+            "key": "polling",
+            "value": "2"
+        }
+    ],
+    "collector_id": "127.0.0.1:15000",
+    "agent_id": "vm_agent_1",
+    "prometheus_topic": "prometheus",
+    "node_url_suffix": "/metrics",
+    "prometheus_job": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2",
+    "object_type": "added_prometheus_collector"
+}
+2020-07-07 17:34:12,650 INFO worker.py Class: RVM_agent return_to_server Agent transmitted the answer
+2020-07-07 17:34:12,652 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:34:12,698 INFO worker.py Class: RVM_agent delivery_report Answer delivered to vm_agent_1_backward [0]
+2020-07-07 17:34:12,708 INFO worker.py Class: RVM_agent check_messages Agent received Message
+2020-07-07 17:34:24,783 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started
+2020-07-07 17:34:24,862 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 run 
+Prometheus collector started with parameters
+host: 127.0.0.1
+port: 15000
+interval: 1
+Prometheus Job: NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2
+Kafka Topic: prometheus
+Labels: [
+    {
+        "key": "nsId",
+        "value": "fgt-9f62028-cbe4-4d07-b89d-e39d07943175"
+    },
+    {
+        "key": "vnfdId",
+        "value": "spr2"
+    },
+    {
+        "key": "instance",
+        "value": "NS-fgt-9f62028-cbe4-4d07-b89d-e39d07943175-VNF-spr2"
+    },
+    {
+        "key": "exporter",
+        "value": "onewaylatency_exporter"
+    }
+]
+2020-07-07 17:35:20,973 INFO worker.py Class: ThreadPrometheusCollector: 127.0.0.1:15000 __init__ Started

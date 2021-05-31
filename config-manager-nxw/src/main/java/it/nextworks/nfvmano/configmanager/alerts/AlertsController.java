@@ -151,7 +151,7 @@ public class AlertsController {
             String alertId = ctx.pathParam("alertId");
             log.info("Validation successful, executing op {} on {}", loggedOp, alertId);
             Alert newAlert = ctx.get("_parsed");
-            if (alertId.equals(newAlert.getAlertId())) {
+            if (!alertId.equals(newAlert.getAlertId())) {
                 ctx.fail(new HttpStatusException(400, "Cannot modify alertId"));
             }
             Future<Alert> future = repo.update(newAlert);

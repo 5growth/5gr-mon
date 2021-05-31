@@ -1,0 +1,18 @@
+#!/bin/bash
+
+sudo systemctl stop peccm_exporter
+
+sudo systemctl disable peccm_exporter
+
+rm -f /etc/systemd/system/peecm_exporter.service
+
+sudo systemctl daemon-reload
+
+
+
+
+
+
+
+
+

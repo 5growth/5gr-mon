@@ -2,8 +2,11 @@
 Description=RVM agent Service
 
 [Service]
+
 TimeoutStartSec=0
 Restart=on-failure
+Environment=LC_ALL=C.UTF-8
+Environment=LANG=C.UTF-8
 EnvironmentFile={{ config_path }}
 {% if extra_env_path -%} EnvironmentFile=-{{ extra_env_path }} {% endif %}
 User={{ user }}

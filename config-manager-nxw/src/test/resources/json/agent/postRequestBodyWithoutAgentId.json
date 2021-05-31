@@ -1,0 +1,5 @@
+{
+  "install_method": "cloud_init",
+  "description": "VNF_1",
+  "daemon_user": "ubuntu"
+}

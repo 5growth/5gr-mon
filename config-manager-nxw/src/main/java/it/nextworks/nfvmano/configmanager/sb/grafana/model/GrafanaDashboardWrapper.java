@@ -74,4 +74,21 @@ public class GrafanaDashboardWrapper {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GrafanaDashboardWrapper that = (GrafanaDashboardWrapper) o;
+
+        if (!meta.equals(that.meta)) return false;
+        return dashboard.equals(that.dashboard);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = meta.hashCode();
+        result = 31 * result + dashboard.hashCode();
+        return result;
+    }
 }

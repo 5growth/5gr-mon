@@ -1,0 +1,31 @@
+#!/bin/bash
+
+STATUS="$(systemctl is-active onewaylatency_exporter.service)"
+if [ "${STATUS}" = "active" ]; then
+    echo " Service onewaylatency_exporter.service running.... so exiting "
+    exit 1
+fi
+
+mkdir -p /opt/onewaylatency_exporter
+wget {{ fileserver_url }}/resources/files/exporters/onewaylatency_exporter/exporter_one_way_latency.py -O /opt/onewaylatency_exporter/exporter_one_way_latency.py
+wget {{ fileserver_url }}/resources/files/exporters/onewaylatency_exporter/requirements.txt -O /opt/onewaylatency_exporter/requirements.txt
+pip3 install -r /opt/onewaylatency_exporter/requirements.txt
+
+cat << EOF > /etc/systemd/system/onewaylatency_exporter.service
+[Unit]
+Description=onewaylatency_exporter
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/onewaylatency_exporter
+ExecStart=/usr/bin/python3 /opt/onewaylatency_exporter/exporter_one_way_latency.py
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+
+sudo systemctl enable onewaylatency_exporter
+
+sudo systemctl start onewaylatency_exporter

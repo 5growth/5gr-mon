@@ -17,28 +17,17 @@
 package it.nextworks.nfvmano.configmanager.prometheusScraper;
 
 import io.vertx.core.Future;
-import io.vertx.core.file.AsyncFile;
-import io.vertx.core.file.OpenOptions;
-import io.vertx.core.streams.Pump;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.api.validation.ValidationException;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
 import it.nextworks.nfvmano.configmanager.common.DeleteResponse;
 import it.nextworks.nfvmano.configmanager.prometheusScraper.model.PrometheusScraper;
-import it.nextworks.nfvmano.configmanager.rvmagent.messages.AddPrometheusCollectorResponse;
-import it.nextworks.nfvmano.configmanager.rvmagent.messages.RVMAgentCommand;
-import it.nextworks.nfvmano.configmanager.rvmagent.messages.RVMAgentCommandResponse;
-import it.nextworks.nfvmano.configmanager.rvmagent.model.PrometheusCollector;
-import it.nextworks.nfvmano.configmanager.rvmagent.model.RVMAgent;
-import it.nextworks.nfvmano.configmanager.rvmagent.model.RVMAgentExporter;
-import it.nextworks.nfvmano.configmanager.sb.PrometheusScraper.PrometheusScraperService;
 import it.nextworks.nfvmano.configmanager.utils.ContextUtils;
 import it.nextworks.nfvmano.configmanager.utils.Validated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;

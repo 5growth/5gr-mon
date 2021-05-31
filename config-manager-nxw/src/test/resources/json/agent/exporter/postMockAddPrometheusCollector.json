@@ -1,0 +1,22 @@
+{
+  "host": "127.0.0.1",
+  "port": "9100",
+  "interval": "1",
+  "labels": [
+    {
+      "key": "nsId",
+      "value": "fgt-b7c85d6-2e44-462b-a87b-41156f45140a"
+    },
+    {
+      "key": "vnfdId",
+      "value": "webserver"
+    }
+  ],
+  "params": null,
+  "collector_id": "127.0.0.1:9100",
+  "agent_id": "vm_agent_1",
+  "prometheus_topic": "prometheus",
+  "node_url_suffix": "/metrics",
+  "prometheus_job": "vm_agent_1",
+  "object_type": "add_prometheus_collector"
+}

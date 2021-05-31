@@ -12,7 +12,6 @@ import requests
 
 from rvm_agent.utils import get_logger
 
-
 class ThreadKeepAlive(threading.Thread):
     """
         The class sends keepalive messages to the server.
@@ -107,7 +106,9 @@ class ThreadPrometheusCollector(threading.Thread):
         self.local_logger.info("Started")
         self.interval = config['interval']
         self.node_url_suffix = config['node_url_suffix']
-        self.url = "http://" + self.host + ":" + self.port + config['node_url_suffix']
+        self.url = config["url"]
+        self.params = config["params"]
+        self.param_for_url = config["param_for_url"]
         self._running = True
         self.producer = None
         self.prometheus_topic = config['prometheus_topic']
@@ -135,6 +136,9 @@ class ThreadPrometheusCollector(threading.Thread):
         prometheus_url_suffix = "/metrics/job/" + self.prometheus_job
         for label in self.labels:
             prometheus_url_suffix = prometheus_url_suffix + "/" + label['key'] + "/" + label['value']
+        if self.params != None:
+            for param in self.params:
+                prometheus_url_suffix = prometheus_url_suffix + "/" + param['key'] + "/" + param['value']
         while self._running:
             try:
                 # Requests to Prometheus Node exporter
@@ -225,14 +229,31 @@ class RVMAgent(object):
         """
         self.agent_config = agent_config
         self.lgr = get_logger("RVM_agent")
+        rvm_agent_id = ""
         with open(agent_config) as f:
             params = json.load(f)
         self.params = params
-        self.bootstrap_servers = params.get('bootstrap_servers')
-        self.forward_topic = params.get('forward_topic')
-        self.backward_topic = params.get('backward_topic')
+        if "identifier_mode" in self.params.keys():
+            self.lgr.info("identifier_mode is " + self.params["identifier_mode"])
+            if self.params["identifier_mode"] == "hostname":
+                rvm_agent_id = os.uname().nodename
+                self.lgr.info("Hostname is " + rvm_agent_id)
+                rvm_agent_id_parts = rvm_agent_id.split("-")
+                if len(rvm_agent_id_parts) >= 7:
+                    rvm_agent_id_parts[6] = "0"
+                    rvm_agent_id = "-".join(rvm_agent_id_parts)
+                self.lgr.info("RVM Agent Id  is " + rvm_agent_id)
+                self.forward_topic = rvm_agent_id + '_forward'
+                self.backward_topic = rvm_agent_id + '_backward'
+            if self.params["identifier_mode"] == "ID":
+                self.forward_topic = params.get('forward_topic')
+                self.backward_topic = params.get('backward_topic')
+        else:
+            self.forward_topic = params.get('forward_topic')
+            self.backward_topic = params.get('backward_topic')
         self.log_file_name = params.get('logfile')
         self.prometheus_collector_dict = {}
+        self.bootstrap_servers = params.get('bootstrap_servers')
         self.consumer = Consumer({
             'bootstrap.servers': self.bootstrap_servers,
             'group.id': self.forward_topic,
@@ -327,6 +348,9 @@ class RVMAgent(object):
                 "interval": value.interval,
                 "prometheus_topic": value.prometheus_topic,
                 "labels": value.labels,
+                "params" : value.params,
+                "url": value.url,
+                "param_for_url": value.param_for_url,
                 "port": value.port,
                 "node_url_suffix": value.node_url_suffix,
                 "prometheus_job": value.prometheus_job
@@ -447,6 +471,10 @@ class RVMAgent(object):
                             'interval': '1',
                             'labels': [{'key': 'instance',
                                         'value': 'vm_agent_1:9100'}],
+                            "params": [{"key": "ip",
+                                        "value": "192.168.1.10"},
+                                        {"key": "polling",
+                                        "value": "2"}],
                             'collector_id': '127.0.0.1:9100',
                             'agent_id': 'vm_agent_1',
                             'prometheus_topic': 'prometheus',
@@ -475,10 +503,22 @@ class RVMAgent(object):
         """
         host = config_prometheus_collector['host']
         port = config_prometheus_collector['port']
+        params = ""
+        if "params" in config_prometheus_collector.keys() and config_prometheus_collector["params"] != None:
+            for param in config_prometheus_collector["params"]:
+                key = param["key"]
+                value = param["value"]
+                if params == "":
+                    params = params + "?" + key + "=" + value
+                else:
+                    params = params + "&" + key + "=" + value
+        url = "http://" + host + ":" + port + config_prometheus_collector['node_url_suffix'] + params
+        config_prometheus_collector['param_for_url'] = params.replace("?", "")
+        config_prometheus_collector['url'] = url
         # Creates Prometheus Collector Thread
         prometheus_collector = ThreadPrometheusCollector(config_prometheus_collector)
         prometheus_collector.set_producer(self.producer)
-        key = str(host) + ":" + str(port)
+        key = url
         if key in self.prometheus_collector_dict.keys():
             self.prometheus_collector_dict[key].terminate()
             del (self.prometheus_collector_dict[key])
@@ -489,6 +529,8 @@ class RVMAgent(object):
         prometheus_collector.start()
         return_message = copy.copy(config_prometheus_collector)
         return_message.update({'object_type': "added_prometheus_collector"})
+        del (return_message['param_for_url'])
+        del (return_message['url'])
         return return_message
 
     def delete_prometheus_collector(self, message):

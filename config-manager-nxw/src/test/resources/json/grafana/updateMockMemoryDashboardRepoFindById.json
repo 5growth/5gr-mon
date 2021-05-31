@@ -1,0 +1,17 @@
+{
+  "dashboardId": "e692OPYGz",
+  "url": "/d/e692OPYGz/test_dash1",
+  "name": "test_dash1",
+  "panels": [
+    {
+      "title": "mp1(VcpuUsageMean.spr2)",
+      "query": "sum(rate(http_requests_total[1m]))",
+      "size": "fullscreen"
+    }
+  ],
+  "users": [
+    "pippo"
+  ],
+  "plottedTime": 61,
+  "refreshTime": "5s"
+}

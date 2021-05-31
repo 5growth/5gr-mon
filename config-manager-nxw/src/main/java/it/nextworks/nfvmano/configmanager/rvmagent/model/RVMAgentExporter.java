@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.io.Resources;
 import com.hubspot.jinjava.Jinjava;
-import it.nextworks.nfvmano.configmanager.rvmagent.messages.RVMAgentCommand;
-import org.apache.commons.codec.Charsets;
 import io.vertx.ext.web.api.validation.ValidationException;
+import it.nextworks.nfvmano.configmanager.MainVerticle;
+import it.nextworks.nfvmano.configmanager.rvmagent.messages.RVMAgentCommand;
 import it.nextworks.nfvmano.configmanager.utils.Validated;
-
+import org.apache.commons.codec.Charsets;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,7 +34,8 @@ public class RVMAgentExporter implements Validated{
     @JsonProperty("prometheus_job")
     private String prometheusJob;
     private String interval = "1";
-    private List<PrometheusLabel> labels;
+    private List<StructureKeyValue> labels;
+    private List<StructureKeyValue> params;
     @JsonIgnore
     private HashMap<String, List<ExporterParameter>> infoExporters;
 
@@ -57,10 +58,7 @@ public class RVMAgentExporter implements Validated{
 
     public Optional<ValidationException> validate() {
         if (agentId == null) {
-            return Optional.of(new ValidationException("ALERT: alertname cannot be null"));
-        }
-        if (typeMessage == null) {
-            return Optional.of(new ValidationException("ALERT: query cannot be null"));
+            return Optional.of(new ValidationException("ALERT: agentId cannot be null"));
         }
         return Optional.empty();
     }
@@ -177,17 +175,24 @@ public class RVMAgentExporter implements Validated{
         this.interval = interval;
     }
 
-    public List<PrometheusLabel> getLabels() {
+    public List<StructureKeyValue> getLabels() {
         return labels;
     }
 
-    public void setLabels(List<PrometheusLabel> labels) {
+    public void setLabels(List<StructureKeyValue> labels) {
         this.labels = labels;
+    }
+
+    public List<StructureKeyValue> getParams() {
+        return params;
+    }
+
+    public void setParams(List<StructureKeyValue> params) {
+        this.params = params;
     }
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RVMAgentExporter that = (RVMAgentExporter) o;
@@ -205,17 +210,19 @@ public class RVMAgentExporter implements Validated{
                 Objects.equals(nodeUrlSuffix, that.nodeUrlSuffix) &&
                 Objects.equals(prometheusJob, that.prometheusJob) &&
                 Objects.equals(interval, that.interval) &&
-                Objects.equals(labels, that.labels);
+                Objects.equals(labels, that.labels) &&
+                Objects.equals(params, that.params) &&
+                Objects.equals(infoExporters, that.infoExporters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(agentId, commandId, args, env, typeMessage, cwd, exporter, body, host, prometheusTopic, port, nodeUrlSuffix, prometheusJob, interval, labels);
+        return Objects.hash(agentId, commandId, args, env, typeMessage, cwd, exporter, body, host, prometheusTopic, port, nodeUrlSuffix, prometheusJob, interval, labels, params, infoExporters);
     }
 
     @Override
     public String toString() {
-        return "RVMAgentInstallExporter{" +
+        return "RVMAgentExporter{" +
                 "agentId='" + agentId + '\'' +
                 ", commandId=" + commandId +
                 ", args=" + args +
@@ -231,6 +238,8 @@ public class RVMAgentExporter implements Validated{
                 ", prometheusJob='" + prometheusJob + '\'' +
                 ", interval='" + interval + '\'' +
                 ", labels=" + labels +
+                ", params=" + params +
+                ", infoExporters=" + infoExporters +
                 '}';
     }
 
@@ -254,7 +263,25 @@ public class RVMAgentExporter implements Validated{
             e.printStackTrace();
         }
 
-        String script = jinjava.render(template, null);
+        Map<String, Object> args_dict = new HashMap<String, Object> ();
+        String path = String.format("http://%s:%s", MainVerticle.ip, MainVerticle.port);
+        List<String> paths = new ArrayList<String>();
+        for (StructureKeyValue keyValue :this.getLabels()) {
+            args_dict.put(keyValue.getKey(), keyValue.getValue());
+            if (keyValue.getKey().startsWith("file")){
+                paths.add(keyValue.getValue());
+            }
+        }
+        for (StructureKeyValue keyValue :this.getParams()) {
+            args_dict.put(keyValue.getKey(), keyValue.getValue());
+            if (keyValue.getKey().startsWith("file")){
+                paths.add(keyValue.getValue());
+            }
+        }
+        args_dict.put("paths", paths);
+        args_dict.put("fileserver_url", path);
+        args_dict.put("kafka_bootstrap_server", MainVerticle.kafka_bootstrap_server);
+        String script = jinjava.render(template, args_dict);
         RVMAgentCommand rvmAgentCommand = new RVMAgentCommand();
         rvmAgentCommand.setAgentId(this.getAgentId());
         rvmAgentCommand.setArgs(this.getArgs());
@@ -306,6 +333,9 @@ public class RVMAgentExporter implements Validated{
                 port = exporterParameter.getValue();
             }
         }
+        if (port == null){
+            return null;
+        }
         addPrometheusCollector.setPort(port);
         addPrometheusCollector.setObjectType("add_prometheus_collector");
         addPrometheusCollector.setHost(this.getHost());
@@ -315,11 +345,13 @@ public class RVMAgentExporter implements Validated{
         addPrometheusCollector.setPrometheusJob(this.getPrometheusJob());
         addPrometheusCollector.setPrometheusTopic(this.getPrometheusTopic());
         addPrometheusCollector.setRvmAgentId(this.getAgentId());
+        addPrometheusCollector.setParams(this.getParams());
         return addPrometheusCollector;
     }
 
     @JsonIgnore
     public void setCollector(PrometheusCollector return_addPrometheusCollector) {
+
         return_addPrometheusCollector.getCollectorId();
         this.setHost(return_addPrometheusCollector.getHost());
         this.setInterval(return_addPrometheusCollector.getInterval());
@@ -329,6 +361,7 @@ public class RVMAgentExporter implements Validated{
         this.setPrometheusJob(return_addPrometheusCollector.getPrometheusJob());
         this.setPrometheusTopic(return_addPrometheusCollector.getPrometheusTopic());
         this.setAgentId(return_addPrometheusCollector.getRvmAgentId());
+        this.setParams(return_addPrometheusCollector.getParams());
     }
 
     @JsonIgnore

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+sudo systemctl stop blackbox_exporter
+
+sudo systemctl disable blackbox_exporter
+
+rm -f /etc/sysconfig/blackbox_exporter
+
+rm -f /etc/systemd/system/blackbox_exporter.service
+
+sudo systemctl daemon-reload
+
+rm -f /usr/sbin/node_exporter
+rm -f /opt/blackbox_exporter
+
+
+
+
+
+
+
+

@@ -2,12 +2,15 @@ package it.nextworks.nfvmano.configmanager.render;
 
 import com.google.common.io.Resources;
 import com.hubspot.jinjava.Jinjava;
+import it.nextworks.nfvmano.configmanager.MainVerticle;
 import it.nextworks.nfvmano.configmanager.utils.ConfigReader;
 import org.apache.commons.codec.Charsets;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class CreateInitScript {
 
@@ -20,8 +23,9 @@ public class CreateInitScript {
     private String bootstrapServers = null;
     private String rvmAgentName = null;
     private String rvmDaemonUser = null;
-    private String fileServer = "./fileserver";
+    private String fileServer = "fileserver";
     private String file_server_url = null;
+    private String rvmagentIdentifierMode = null;
 
     public String getRestHost() {
         return restHost;
@@ -102,12 +106,19 @@ public class CreateInitScript {
     public String getFile_server_url() {
         return "http://" + restHost + ':' + restPort + "/resources";
     }
+    public String getRvmagentIdentifierMode() {
+        return rvmagentIdentifierMode;
+    }
+
+    public void setRvmagentIdentifierMode(String rvmagentIdentifierMode) {
+        this.rvmagentIdentifierMode = rvmagentIdentifierMode;
+    }
 
     public CreateInitScript(String rvmAgentName, String rvmDaemonUser) {
         ConfigReader config = new ConfigReader();
-        String kafka_bootstrap_servers = config.getProperty("kafka.bootstrap.servers");
+        String kafka_bootstrap_servers = config.getProperty("kafka.bootstrap.server");
         String host = kafka_bootstrap_servers.split(":")[0];
-        this.restHost = host;
+        this.restHost = MainVerticle.ip;
         this.bootstrapServers = host;
 
         this.rvmAgentName = rvmAgentName;
@@ -138,6 +149,7 @@ public class CreateInitScript {
         daemon_env.put("RVM_DAEMON_WORKDIR", "~" + rvmDaemonUser + "/" + rvmAgentName + "/work");
         daemon_env.put("RVM_DAEMON_NAME", rvmAgentName);
         daemon_env.put("AGENT_CONFIG", "/home/" + rvmDaemonUser + "/" + rvmAgentName + "/config/config.json");
+        daemon_env.put("IDENTIFIER_MODE", rvmagentIdentifierMode);
         Map<String, Object> rvm_agent = new HashMap<String, Object> ();
         rvm_agent.put("rest_host", restHost);
         rvm_agent.put("workdir", "~" + rvmDaemonUser + "/" + rvmAgentName + "/work");

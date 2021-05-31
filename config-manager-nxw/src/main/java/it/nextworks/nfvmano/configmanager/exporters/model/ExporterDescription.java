@@ -44,6 +44,13 @@ public class ExporterDescription {
     @JsonProperty("instance")
     private String instance;
 
+    private String exporter;
+    @JsonProperty("params_string")
+    private String paramsString;
+    @JsonProperty("destination_vnf")
+    private String destinationVnf;
+
+
 
     public ExporterDescription name(String name) {
         this.name = name;
@@ -64,6 +71,30 @@ public class ExporterDescription {
 
     public void setVnfdId(String vnfdId) {
         this.vnfdId = vnfdId;
+    }
+
+    public String getExporter() {
+        return exporter;
+    }
+
+    public void setExporter(String exporter) {
+        this.exporter = exporter;
+    }
+
+    public String getParamsString() {
+        return paramsString;
+    }
+
+    public void setParamsString(String paramsString) {
+        this.paramsString = paramsString;
+    }
+
+    public String getDestinationVnf() {
+        return destinationVnf;
+    }
+
+    public void setDestinationVnf(String destinationVnf) {
+        this.destinationVnf = destinationVnf;
     }
 
     /**
@@ -150,12 +181,15 @@ public class ExporterDescription {
                 Objects.equals(nsId, that.nsId) &&
                 Objects.equals(vnfdId, that.vnfdId) &&
                 Objects.equals(metricsPath, that.metricsPath) &&
-                Objects.equals(instance, that.instance);
+                Objects.equals(instance, that.instance) &&
+                Objects.equals(exporter, that.exporter) &&
+                Objects.equals(paramsString, that.paramsString) &&
+                Objects.equals(destinationVnf, that.destinationVnf);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, endpoint, collectionPeriod, nsId, vnfdId, metricsPath, instance);
+        return Objects.hash(name, endpoint, collectionPeriod, nsId, vnfdId, metricsPath, instance, exporter, paramsString, destinationVnf);
     }
 
     @Override
@@ -168,6 +202,9 @@ public class ExporterDescription {
                 ", vnfdId='" + vnfdId + '\'' +
                 ", metricsPath='" + metricsPath + '\'' +
                 ", instance='" + instance + '\'' +
+                ", exporter='" + exporter + '\'' +
+                ", paramsString='" + paramsString + '\'' +
+                ", destinationVnf='" + destinationVnf + '\'' +
                 '}';
     }
 

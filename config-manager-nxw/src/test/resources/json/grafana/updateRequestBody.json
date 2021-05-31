@@ -1,0 +1,16 @@
+{
+  "dashboardId": "e692OPYGz",
+  "name": "test_dash1",
+  "panels": [
+    {
+      "title": "Http request rate",
+      "query": "sum(rate(http_requests_total[1m]))",
+      "size": null
+    }
+  ],
+  "users": [
+    "pippo"
+  ],
+  "plottedTime": 600,
+  "refreshTime": "5s"
+}

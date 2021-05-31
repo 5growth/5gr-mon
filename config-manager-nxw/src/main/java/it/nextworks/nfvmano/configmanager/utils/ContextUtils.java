@@ -16,7 +16,6 @@
 
 package it.nextworks.nfvmano.configmanager.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -46,6 +45,7 @@ public class ContextUtils {
 
     private static final String APPLICATION_YAML = "application/x-yaml";
     private static final String APPLICATION_JSON = "application/json";
+    private static final String TEXT_PLAIN = "text/plain";
 
     private static final Map<String, ObjectMapper> workingTypes;
     private static final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
@@ -59,6 +59,7 @@ public class ContextUtils {
         workingTypes = new HashMap<>();
         workingTypes.put(APPLICATION_JSON, jsonMapper);
         workingTypes.put(APPLICATION_YAML, yamlMapper);
+        workingTypes.put(TEXT_PLAIN, null);
     }
 
     public static void respond(RoutingContext ctx, Object object) {
@@ -112,7 +113,13 @@ public class ContextUtils {
         ctx.response().setStatusCode(statusCode);
         ObjectMapper objectMapper = workingTypes.get(accepts);
         try {
-            String serialized = objectMapper.writeValueAsString(object);
+            String serialized;
+
+            if (objectMapper == null){
+                serialized = (String) object;
+            }else {
+                serialized = objectMapper.writeValueAsString(object);
+            }
             ctx.response().putHeader(HttpHeaderNames.CONTENT_TYPE, accepts).end(serialized);
         } catch (Exception exc) {
             log.error("Could not serialize object {}", object);

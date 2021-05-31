@@ -1,0 +1,14 @@
+#!/bin/bash
+
+sudo systemctl stop filebeat
+
+sudo systemctl disable filebeat
+
+sudo systemctl daemon-reload
+
+
+
+
+
+
+

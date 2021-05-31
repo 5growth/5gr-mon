@@ -1,7 +1,7 @@
 #Kibana Dashboard API Json Generator
 ##How to use
 1. Clone project.
-2. ``mvn clean install`` to install dependency.
+2. ``mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true`` to install dependency.
 
 ##Example
 

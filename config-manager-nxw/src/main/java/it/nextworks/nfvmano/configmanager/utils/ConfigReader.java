@@ -19,11 +19,7 @@ package it.nextworks.nfvmano.configmanager.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -65,9 +61,7 @@ public class ConfigReader {
 
         InputStream inputStream;
         String propFileName = "config.properties";
-
         File file = new File(propFileName);
-
         if (file.exists() && file.isFile()) {
             inputStream = new FileInputStream(file);
         } else {

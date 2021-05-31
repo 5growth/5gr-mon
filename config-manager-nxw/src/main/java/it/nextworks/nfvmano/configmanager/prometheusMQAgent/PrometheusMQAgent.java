@@ -7,17 +7,16 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
-import it.nextworks.nfvmano.configmanager.prometheusScraper.model.PrometheusScraper;
+import it.nextworks.nfvmano.configmanager.MainVerticle;
+import it.nextworks.nfvmano.configmanager.sb.prometheusPushGateway.model.MetricsObject;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,35 +27,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static io.vertx.core.json.Json.mapper;
 
 public class PrometheusMQAgent extends Thread {
+    private final ConcurrentHashMap<Map<String, String>, MetricsObject> pushGatewayMemory;
     private KafkaConsumer<String, String> consumer;
     private KafkaProducer<String, String> producer;
     private List<String> topics = new ArrayList<>();
     private AtomicBoolean shutdown;
     private CountDownLatch shutdownLatch;
     private Properties config;
-    private Vertx vertx;
     private WebClient client;
     private static final Logger log = LoggerFactory.getLogger(PrometheusMQAgent.class);
-    private int pushGatewayPort;
-    private String pushGatewayAddress;
     private String pushGatewayTopic;
-    private ConcurrentHashMap<String, HashMap<String, String>> concurrentHashMap;
+    private ConcurrentHashMap<String, HashMap<String, String>> scraperHashMap;
 
 
-    public PrometheusMQAgent(Properties config, Vertx vertx, ConcurrentHashMap<String, HashMap<String, String>> concurrentHashMap) {
+    public PrometheusMQAgent(Properties config, Vertx vertx, ConcurrentHashMap<String, HashMap<String, String>> concurrentHashMap, ConcurrentHashMap<Map<String, String>, MetricsObject> pushGatewayMemory) {
         this.config = config;
-        this.concurrentHashMap = concurrentHashMap;
+        this.scraperHashMap = concurrentHashMap;
+        this.pushGatewayMemory = pushGatewayMemory;
         this.shutdown = new AtomicBoolean(false);
         this.shutdownLatch = new CountDownLatch(1);
-        this.vertx = vertx;
         this.client = WebClient.create(vertx);
-        this.pushGatewayPort = Integer.parseInt(this.config.getProperty("prometheus.PushGatewayPort"));
-        this.pushGatewayAddress = this.config.getProperty("prometheus.PushGatewayAddress");
         this.pushGatewayTopic = this.config.getProperty("prometheus.PushGateway.topic");
         this.topics.add(this.pushGatewayTopic);
         Properties configForKafkaConsumer = (Properties) config.clone();
-        configForKafkaConsumer.remove("prometheus.PushGatewayPort");
-        configForKafkaConsumer.remove("prometheus.PushGatewayAddress");
         configForKafkaConsumer.remove("prometheus.PushGateway.topic");
         Properties configForKafkaProducer = (Properties) configForKafkaConsumer.clone();
         configForKafkaProducer.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -73,18 +66,19 @@ public class PrometheusMQAgent extends Thread {
         log.debug("PrometheusMQAgent received message from kafka: " + record.value());
         JsonObject obj = new JsonObject(record.value());
         String key = obj.getString("key");
-        Buffer buffer = Buffer.buffer(obj.getString("value"));
-        client.post(this.pushGatewayPort, this.pushGatewayAddress, key)
-                .sendBuffer(buffer, ar -> {
-                    if (ar.failed()) {
-                        log.error("Error during transmitting data to Prometheus GateWay: " + ar.cause().getMessage());
-                        HttpResponse<Buffer> result = ar.result();
-                    }
-                });
-        String[] keyArray  = key.split("/");
+        String  metrics_string = obj.getString("value");
+        key = key.replace("//","/");
+        String[] keyArray  = key.split("(?<!:)/");
+        keyArray = Arrays.copyOfRange(keyArray,2, keyArray.length);
         String nsId = "";
         String vnfId = "";
+//        String jobId = "";
+        Map<String, String> mapLabelValue = new HashMap<>();
         for(int i = 0; i < keyArray.length; i+=2){
+            mapLabelValue.put(keyArray[i], keyArray[i+1]);
+//            if (keyArray[i].equals("job")){
+//                jobId = keyArray[i+1];
+//            }
             if (keyArray[i].equals("nsId")){
                 nsId = keyArray[i+1];
             }
@@ -92,18 +86,33 @@ public class PrometheusMQAgent extends Thread {
                 vnfId = keyArray[i+1];
             }
         }
+
+        if (mapLabelValue.size() > 0 ) {
+            MetricsObject metricsObject = new MetricsObject(metrics_string);
+            this.pushGatewayMemory.put(mapLabelValue, metricsObject);
+        }
+
         String mapKey = nsId + "_" + vnfId;
-        HashMap<String, String> metricTopicMap =  concurrentHashMap.get(mapKey);
+        HashMap<String, String> metricTopicMap =  scraperHashMap.get(mapKey);
         if (metricTopicMap != null){
             scrapeAndPublishToKafka(nsId, vnfId, metricTopicMap);
         }
+    }
+
+    public static boolean isInclude(Map<String, String> key_value2, Map<String, String> key_value) {
+        for (Map.Entry entry: key_value2.entrySet()){
+            if (!entry.getValue().equals(key_value.get(entry.getKey()))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void scrapeAndPublishToKafka(String nsId, String vnfId, HashMap<String, String> metricTopicMap) {
         for (Map.Entry<String, String> metricTopic : metricTopicMap.entrySet()) {
             String url = "/api/v1/query?query=" + metricTopic.getKey() + "{nsId=\"" +
                     nsId + "\",vnfdId=\"" + vnfId + "\"}";
-            this.client.get(9090, "127.0.0.1", url)
+            this.client.get(MainVerticle.promPort, MainVerticle.promHost, url)
                     .send(ar -> {
                         if (ar.failed()) {
                             log.error("Error during transmitting data to Prometheus: " + ar.cause().getMessage());

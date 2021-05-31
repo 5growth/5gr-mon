@@ -16,26 +16,8 @@
 
 package it.nextworks.nfvmano.configmanager.sb.kafkaRVMAgent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.vertx.core.Future;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.ext.web.client.HttpRequest;
-import io.vertx.ext.web.client.HttpResponse;
-import io.vertx.ext.web.client.WebClient;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.model.AlertManagerConfig;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.model.AlertRules;
-import it.nextworks.nfvmano.configmanager.sb.prometheus.model.PrometheusConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class RVMAgentConnector {
 
@@ -43,13 +25,32 @@ public class RVMAgentConnector {
 
     private String kafka_bootstrap_servers;
 
+    private String rvmagentIdentifierMode;
+
     public RVMAgentConnector(
-            String kafka_bootstrap_servers
+            String kafka_bootstrap_servers, String rvmagentIdentifierMode
     ) {
+        this.kafka_bootstrap_servers = kafka_bootstrap_servers;
+        this.rvmagentIdentifierMode = rvmagentIdentifierMode;
+    }
+
+    public String getKafka_bootstrap_servers() {
+        return kafka_bootstrap_servers;
+    }
+
+    public void setKafka_bootstrap_servers(String kafka_bootstrap_servers) {
         this.kafka_bootstrap_servers = kafka_bootstrap_servers;
     }
 
-//    private Future<Void> reloadAMConfig() {
+    public String getRvmagentIdentifierMode() {
+        return rvmagentIdentifierMode;
+    }
+
+    public void setRvmagentIdentifierMode(String rvmagentIdentifierMode) {
+        this.rvmagentIdentifierMode = rvmagentIdentifierMode;
+    }
+
+    //    private Future<Void> reloadAMConfig() {
 //        Future<Void> voidFuture = callReloadEndpoint(amHost, amPort);
 //        return voidFuture.recover(e -> {
 //            log.error(

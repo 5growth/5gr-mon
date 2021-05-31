@@ -1,0 +1,23 @@
+{
+  "objects": [
+    {
+      "id": "{{ id }}",
+      "type": "visualization",
+      "updated_at": "2020-03-16T08:14:14.581Z",
+      "version": "WzksMV0=",
+      "attributes": {
+        "title": "{{ title }}",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"index\":\"logstash-*\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "visState": "{\"title\":\"Pie Visualization\",\"type\":\"pie\",\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"isDonut\":false,\"labels\":{\"show\":false,\"values\":true,\"last_level\":true,\"truncate\":100},\"dimensions\":{\"metric\":{\"accessor\":0,\"format\":{\"id\":\"number\"},\"params\":{},\"aggType\":\"{{ aggregationType }}\"}}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"{{ aggregationType }}\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"{{ metricNameX }}\",\"interval\":1,\"min_doc_count\":false,\"has_extended_bounds\":false,\"extended_bounds\":{\"min\":\"\",\"max\":\"\"}}}]}"
+      },
+      "migrationVersion": {
+        "visualization": "7.3.1"
+      }
+    }
+  ]
+}

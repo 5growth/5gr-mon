@@ -1,0 +1,56 @@
+{
+  "global": null,
+  "route": {
+    "receiver": "default",
+    "group_wait": "1s",
+    "group_interval": "1s",
+    "repeat_interval": "1s",
+    "group_by": [
+      "cluster",
+      "alertname"
+    ],
+    "routes": [
+      {
+        "match": {
+          "alertname": "19061b80-88c3-4654-b00f-6a4840912f46"
+        },
+        "receiver": "364fa1be-f22d-4ed7-803a-980ecee93647"
+      },
+      {
+        "match": {
+          "alertname": "b6163359-e5d4-4ad9-af15-a8d4b7eb7093"
+        },
+        "receiver": "364fa1be-f22d-4ed7-803a-980ecee93647"
+      }
+    ]
+  },
+  "receivers": [
+    {
+      "name": "default",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://localhost:8088"
+        }
+      ]
+    },
+    {
+      "name": "5d77d2f1-712d-47ad-8210-7ec841f092a5",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://172.18.204.81:8080/sla_manager/notifications"
+        }
+      ]
+    },
+    {
+      "name": "364fa1be-f22d-4ed7-803a-980ecee93647",
+      "webhook_configs": [
+        {
+          "send_resolved": true,
+          "url": "http://localhost:8080"
+        }
+      ]
+    }
+  ]
+}

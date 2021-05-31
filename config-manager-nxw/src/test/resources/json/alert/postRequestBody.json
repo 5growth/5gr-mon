@@ -1,0 +1,11 @@
+{
+  "alertName": "alert1",
+  "labels": [
+  ],
+  "severity": "warning",
+  "for": "10s",
+  "query": "(1 - avg by (instance) (irate(node_cpu_seconds_total{job='57db26e9-d9c5-4bda-ac36-b0fa4b1b7c7a', mode='idle'}[1m])))*100 > 0",
+  "value": 0,
+  "kind": "G",
+  "target": "http://localhost:8080"
+}

@@ -58,6 +58,7 @@ public class RVMAgent implements Validated, Runnable {
     private String status = "Created";
 
     private static final Logger log = LoggerFactory.getLogger(RVMAgent.class);
+    @JsonIgnore
     private String bootstrapServers;
     @JsonIgnore
     private Integer commandId = 0;
@@ -85,14 +86,17 @@ public class RVMAgent implements Validated, Runnable {
     private ArrayList<ErrorMessage> errors;
     @JsonIgnore
     RVMAgentCreateResponse rvmAgentResponse = null;
+    @JsonIgnore
+    String rvmagentIdentifierMode = null;
+
 
     public void start_kafka_client(){
 
         Properties configConsumer = new Properties();
         Properties configProducer = new Properties();
         configConsumer.put("client.id", "server_" + getRvmAgentId());
-        configConsumer.put("bootstrap.servers", "localhost:9092");
-        configProducer.put("bootstrap.servers", "localhost:9092");
+        configConsumer.put("bootstrap.servers", bootstrapServers);
+        configProducer.put("bootstrap.servers", bootstrapServers);
         configProducer.put("acks", "all");
         configConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         configConsumer.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -253,7 +257,7 @@ public class RVMAgent implements Validated, Runnable {
 
     public void shutdown() throws InterruptedException {
         shutdown.set(true);
-        shutdownLatch.await();
+//        shutdownLatch.await();
     }
 
     public Integer getCommandId() {
@@ -274,6 +278,15 @@ public class RVMAgent implements Validated, Runnable {
 
     public void setCommandResultMap(Map<String, KafkaRVMAgentCommandResponse> commandResultMap) {
         this.commandResultMap = commandResultMap;
+    }
+
+    @JsonIgnore
+    public String getBootstrapServers() {
+        return bootstrapServers;
+    }
+    @JsonIgnore
+    public void setBootstrapServers(String bootstrapServers) {
+        this.bootstrapServers = bootstrapServers;
     }
 
     private void sendMessageToRVMAgent(MessageToRVMAgent messageToRVMAgent){
@@ -311,6 +324,7 @@ public class RVMAgent implements Validated, Runnable {
         if (this.rvmAgentResponse == null){
             this.rvmAgentResponse = new RVMAgentCreateResponse();
             CreateInitScript initScript = new CreateInitScript(rvmAgentId, daemonUser);
+            initScript.setRvmagentIdentifierMode(this.rvmagentIdentifierMode);
             this.rvmAgentResponse.setRvmAgentId(rvmAgentId);
             this.rvmAgentResponse.setIntallMethod(intallMethod);
             this.rvmAgentResponse.setDescription(description);
@@ -354,6 +368,14 @@ public class RVMAgent implements Validated, Runnable {
 
     public ArrayList<ErrorMessage> getErrors() {
         return errors;
+    }
+
+    public String getRvmagentIdentifierMode() {
+        return rvmagentIdentifierMode;
+    }
+
+    public void setRvmagentIdentifierMode(String rvmagentIdentifierMode) {
+        this.rvmagentIdentifierMode = rvmagentIdentifierMode;
     }
 
     @Override

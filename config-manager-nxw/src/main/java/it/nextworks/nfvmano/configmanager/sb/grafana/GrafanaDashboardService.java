@@ -21,15 +21,7 @@ import it.nextworks.nfvmano.configmanager.dashboards.DashboardRepo;
 import it.nextworks.nfvmano.configmanager.dashboards.model.Dashboard;
 import it.nextworks.nfvmano.configmanager.dashboards.model.DashboardDescription;
 import it.nextworks.nfvmano.configmanager.dashboards.model.DashboardPanel;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.GrafanaDashboard;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.GrafanaDashboardWrapper;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.Meta;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.Panel;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.PostDashboardResponse;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.Row;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.Target;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.Xaxis;
-import it.nextworks.nfvmano.configmanager.sb.grafana.model.Yaxes;
+import it.nextworks.nfvmano.configmanager.sb.grafana.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +107,13 @@ public class GrafanaDashboardService implements DashboardRepo {
 
     List<Panel> makePanels(List<DashboardPanel> panels) {
         return panels.stream().map(
-                p -> new Panel()
+                p -> {  Integer yAxesMin = null;
+                        Integer yAxesMax = null;
+                        if (p.getTitle().toLowerCase().contains("cpuusage")){
+                            yAxesMin = 0;
+                            yAxesMax = 100;
+                        }
+                        return new Panel()
                         .datasource("Prometheus")
                         .title(p.getTitle())
                         .height(String.format("%spx", 200 * p.getSize().height))
@@ -138,20 +136,20 @@ public class GrafanaDashboardService implements DashboardRepo {
                         )
                         .yAxes(Arrays.asList(
                                 new Yaxes()
-                                        .label(p.getQuery())
+//                                        .label(p.getQuery())
                                         .format("short")
                                         .logBase(1)
-                                        .min(null)
-                                        .max(null)
+                                        .min(yAxesMin)
+                                        .max(yAxesMax)
                                         .show(true),
                                 new Yaxes()
-                                        .label(p.getQuery())
+//                                        .label(p.getQuery())
                                         .format("short")
                                         .logBase(1)
                                         .min(null)
                                         .max(null)
                                         .show(false)
-                        ))
+                        ));}
         ).collect(Collectors.toList());
     }
 
@@ -204,6 +202,7 @@ public class GrafanaDashboardService implements DashboardRepo {
                 .canEdit(true)
                 .canSave(true)
                 .canStar(true);
+		DashboardTime dashboardTime = new DashboardTime("now-" + (dashboard.getPlottedTime()/2) + "m", "now+" + (dashboard.getPlottedTime()/2) + "m");
         GrafanaDashboard gDashboard = new GrafanaDashboard()
                 .uid(dashboard.getDashboardId())
                 .title(dashboard.getName())
@@ -211,6 +210,8 @@ public class GrafanaDashboardService implements DashboardRepo {
                 .schemaVersion(1)
                 .tags(Arrays.asList("generated", "5GT", "ConfigManager"))
                 .timezone("browser")
+                .time(dashboardTime)
+                .dashboardRefreshInterval(dashboard.getRefreshTime().toString())
                 .version(dashboard.getVersion());
         return new GrafanaDashboardWrapper()
                 .meta(meta)
@@ -281,7 +282,8 @@ public class GrafanaDashboardService implements DashboardRepo {
                     } else {  // the id exists
                         return connector.deleteDashboard(dashboardId)
                                 // Then delete it from the db too
-                                .compose(resp -> repo.deleteById(dashboardId, true));
+                                .compose(resp ->
+                                        repo.deleteById(dashboardId, true));
                     }
                 }
         );

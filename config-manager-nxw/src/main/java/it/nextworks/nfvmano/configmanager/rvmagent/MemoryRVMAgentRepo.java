@@ -40,9 +40,9 @@ public class MemoryRVMAgentRepo implements RVMAgentRepo {
     }
 
     @Override
-    public Future<String> deleteAgentById(String agentId) {
+    public Future<Set<String>> deleteAgentById(String agentId) {
         rvmAgentMap.remove(agentId);
-        return Future.succeededFuture(agentId);
+        return Future.succeededFuture(Collections.singleton(agentId));
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MemoryRVMAgentRepo implements RVMAgentRepo {
     }
 
     @Override
-    public Future<String> deletePrometheusCollectorById(String agentId, String prometheusCollectorId) {
+    public Future<Set<String>> deletePrometheusCollectorById(String agentId, String prometheusCollectorId) {
         return null;
     }
 

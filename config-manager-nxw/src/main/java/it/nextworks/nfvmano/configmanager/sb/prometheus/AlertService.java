@@ -202,6 +202,7 @@ public class AlertService implements AlertRepo {
 
     @Override
     public Future<Set<String>> deleteById(String alertId) {
+
         return deleteById(alertId, false);
     }
 

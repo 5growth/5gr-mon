@@ -44,6 +44,11 @@ public class Exporter {
     private String metricsPath = "/metrics";
     @JsonProperty("instance")
     private String instance;
+    private String exporter;
+    @JsonProperty("params_string")
+    private String paramsString;
+    @JsonProperty("destination_vnf")
+    private String destinationVnf;
 
     public Exporter() {
 
@@ -177,26 +182,29 @@ public class Exporter {
         this.instance = instance;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Exporter exporter = (Exporter) o;
-        return honorLabels == exporter.honorLabels &&
-                honorTimestamps == exporter.honorTimestamps &&
-                Objects.equals(exporterId, exporter.exporterId) &&
-                Objects.equals(name, exporter.name) &&
-                Objects.equals(endpoint, exporter.endpoint) &&
-                Objects.equals(collectionPeriod, exporter.collectionPeriod) &&
-                Objects.equals(nsId, exporter.nsId) &&
-                Objects.equals(vnfdId, exporter.vnfdId) &&
-                Objects.equals(metricsPath, exporter.metricsPath) &&
-                Objects.equals(instance, exporter.instance);
+    public void setExporter(String exporter) {
+        this.exporter = exporter;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(exporterId, name, endpoint, collectionPeriod, nsId, vnfdId, honorLabels, honorTimestamps, metricsPath, instance);
+    public String getExporter() {
+        return exporter;
+    }
+
+    public void setDestinationVnf(String destinationVnf) {
+        this.destinationVnf = destinationVnf;
+    }
+
+    public String getDestinationVnf() {
+        return destinationVnf;
+    }
+
+
+    public void setParamsString(String paramsString) {
+        this.paramsString = paramsString;
+    }
+
+    public String getParamsString() {
+        return paramsString;
     }
 
     @Override
@@ -212,14 +220,42 @@ public class Exporter {
                 ", honorTimestamps=" + honorTimestamps +
                 ", metricsPath='" + metricsPath + '\'' +
                 ", instance='" + instance + '\'' +
+                ", exporter='" + exporter + '\'' +
+                ", paramsString='" + paramsString + '\'' +
+                ", destinationVnf='" + destinationVnf + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Exporter exporter1 = (Exporter) o;
+        return honorLabels == exporter1.honorLabels &&
+                honorTimestamps == exporter1.honorTimestamps &&
+                Objects.equals(exporterId, exporter1.exporterId) &&
+                Objects.equals(name, exporter1.name) &&
+                Objects.equals(endpoint, exporter1.endpoint) &&
+                Objects.equals(collectionPeriod, exporter1.collectionPeriod) &&
+                Objects.equals(nsId, exporter1.nsId) &&
+                Objects.equals(vnfdId, exporter1.vnfdId) &&
+                Objects.equals(metricsPath, exporter1.metricsPath) &&
+                Objects.equals(instance, exporter1.instance) &&
+                Objects.equals(exporter, exporter1.exporter) &&
+                Objects.equals(paramsString, exporter1.paramsString) &&
+                Objects.equals(destinationVnf, exporter1.destinationVnf);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(exporterId, name, endpoint, collectionPeriod, nsId, vnfdId, honorLabels, honorTimestamps, metricsPath, instance, exporter, paramsString, destinationVnf);
     }
 
     /**
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(java.lang.Object o) {
+    private String toIndentedString(Object o) {
         if (o == null) {
             return "null";
         }

@@ -24,20 +24,25 @@ import io.vertx.ext.web.Route;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.api.validation.ValidationException;
 import io.vertx.ext.web.handler.impl.HttpStatusException;
+import it.nextworks.nfvmano.configmanager.common.DeleteResponse;
 import it.nextworks.nfvmano.configmanager.rvmagent.messages.AddPrometheusCollectorResponse;
 import it.nextworks.nfvmano.configmanager.rvmagent.messages.RVMAgentCommand;
-import it.nextworks.nfvmano.configmanager.rvmagent.model.RVMAgentExporter;
+import it.nextworks.nfvmano.configmanager.rvmagent.messages.RVMAgentCommandResponse;
 import it.nextworks.nfvmano.configmanager.rvmagent.model.PrometheusCollector;
 import it.nextworks.nfvmano.configmanager.rvmagent.model.RVMAgent;
-import it.nextworks.nfvmano.configmanager.rvmagent.messages.RVMAgentCommandResponse;
+import it.nextworks.nfvmano.configmanager.rvmagent.model.RVMAgentExporter;
 import it.nextworks.nfvmano.configmanager.utils.ContextUtils;
 import it.nextworks.nfvmano.configmanager.utils.Validated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static it.nextworks.nfvmano.configmanager.utils.Paths.Rest.GET_RESOURCES_FILES;
 
 public class RVMAgentController {
 
@@ -46,6 +51,7 @@ public class RVMAgentController {
     private RVMAgentRepo repo;
     private String scriptsFilePath = "fileserver/scripts";
     private Object agentsFilePath = "fileserver/agents";
+    private Object filesFilePath = "fileserver/files";
 
     private static void validate(RoutingContext ctx) {
         Validated raw = ctx.get("_parsed");
@@ -197,17 +203,16 @@ public class RVMAgentController {
         });
     }
 
-
     public void deleteRVMAgent(Route route) {
         String loggedOp = "deleteRVMAgent";
         // No Validation
         // Business
         route.handler(ctx -> {
             // Transform
-            String agentId = ctx.pathParam("agentId");
-            log.info("Validation successful, executing op {} on {}", loggedOp, agentId);
-            Future<String> future = repo.deleteAgentById(agentId);
-            // Translate missing alert into 404 error
+            String alertId = ctx.pathParam("agentId");
+            log.info("Validation successful, executing op {} on {}", loggedOp, alertId);
+            Future<Set<String>> future = repo.deleteAgentById(alertId);
+            // Translate missing agent into 404 error
             future = future.compose(s -> {
                 if (s == null) {
                     ctx.fail(new HttpStatusException(404, "No such RVM Agent"));
@@ -219,14 +224,11 @@ public class RVMAgentController {
         // Respond
         route.handler(ctx -> {
             log.info("Sending response for op {}", loggedOp);
-//            DeleteResponse response = new DeleteResponse().deleted(ctx.<Set<String>>get("_awaited"));
-            String response = "deleted";
+            DeleteResponse response = new DeleteResponse().deleted(ctx.<Set<String>>get("_awaited"));
             log.debug("Response: {}", response);
             ContextUtils.respond(ctx, response);
         });
-
     }
-
 
     public void getRVMAgentCommand(Route route) {
         String loggedOp = "getRVMAgentCommand";
@@ -298,10 +300,10 @@ public class RVMAgentController {
             String agentId = ctx.pathParam("agentId");
             String prometheusCollectorId = ctx.pathParam("prometheusCollectorId");
             log.info("Validation successful, executing op {} on {}", loggedOp, agentId);
-            Future<String> future = repo.deletePrometheusCollectorById(agentId, prometheusCollectorId);
+            Future<Set<String>> future = repo.deletePrometheusCollectorById(agentId, prometheusCollectorId);
             // Translate missing alert into 404 error
             future = future.compose(s -> {
-                if (s.length() == 0) {
+                if (s.size() == 0) {
                     ctx.fail(new HttpStatusException(404, "No such Prometheus Collector"));
                 }
                 return Future.succeededFuture(s);
@@ -311,7 +313,7 @@ public class RVMAgentController {
         // Respond
         route.handler(ctx -> {
             log.info("Sending response for op {}", loggedOp);
-            String response = "deleted";
+            DeleteResponse response = new DeleteResponse().deleted(ctx.<Set<String>>get("_awaited"));
             log.debug("Response: {}", response);
             ContextUtils.respond(ctx, response);
         });
@@ -320,13 +322,16 @@ public class RVMAgentController {
     public void getScripts(Route route) {
         String loggedOp = "getScript";
         route.handler(this::downloadScript);
-
     }
 
     public void getAgents(Route route) {
         String loggedOp = "getAgents";
         route.handler(this::downloadAgent);
+    }
 
+    public void getFiles(Route route) {
+        String loggedOp = "getFiles";
+        route.handler(this::downloadFile);
     }
 
     private void downloadScript(RoutingContext routingContext) {
@@ -341,6 +346,15 @@ public class RVMAgentController {
         String agentPath = String.format("%s/%s", this.agentsFilePath, agentName);
         log.info("download agent: {}", agentName);
         download(routingContext, agentPath);
+    }
+
+    private void downloadFile(RoutingContext routingContext) {
+        String fullURLPath = routingContext.normalisedPath();
+        String URLprefix = GET_RESOURCES_FILES.replace("*", "");
+        String fileName = fullURLPath.replace(URLprefix, "");
+        String filePath = String.format("%s/%s", this.filesFilePath, fileName);
+        log.info("download file: {}", fileName);
+        download(routingContext, filePath);
     }
 
     private void download (RoutingContext routingContext, String path){

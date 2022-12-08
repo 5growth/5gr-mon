@@ -4,7 +4,7 @@ Flask==1.1.2
 flask-swagger==0.2.14
 waitress==2.0.0
 kafka-python==2.0.1
-certifi==2020.12.5
+certifi==2022.12.7
 chardet==4.0.0
 click==7.1.2
 humanfriendly==9.1
